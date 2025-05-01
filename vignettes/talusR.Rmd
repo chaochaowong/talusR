@@ -1,0 +1,38 @@
+---
+title: "Introduction to talusR"
+author:
+  - name: "Chao-Jen Wong"
+    affiliation: "Seattle Children's Research Institute"
+    email: chao-jen.wong@seattlechildrens.org
+output:
+  BiocStyle::html_vignette:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to talusR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+```
+
+# Getting started
+
+For now, this package only takes Talus data that are pre-processed by DIANN—i.e. the summarized protein-abundance file (`*.tsv`). The input metadata table (`*.csv`) must include a column (`which_run`) whose entries exactly match the sample (run) names in that abundance file.
+
+This package also assumes that Talus process only one sample in a single run (one mass-spectrometry acquisition), and DIANN has executed the normalization process across all the runs. 
+
+
+
+
+
+
+
