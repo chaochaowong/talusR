@@ -13,6 +13,10 @@
 #' @param log_transform If \code{TRUE}, perform log2 transformation to the protein abundance
 #'
 #' @return A \code{SummarizedExperiment} objects with three layers of assay data
+#'
+#' @importFrom rlang has_name
+#' @importFrom purrr map
+#' @import SummarizedExperiment
 #' @export
 read_talus <- function(file, meta_file,
                        which_proteinid = 'Protein.Ids',
@@ -30,7 +34,7 @@ read_talus <- function(file, meta_file,
   require(SummarizedExperiment)
 
   tb <- read_delim(file, delim='\t')
-  meta <- read_csv(metadata)
+  meta <- read_csv(meta_file)
 
   # check if the column defined by which_run exist in meta
   if (! rlang::has_name(meta, which_run)) {
@@ -57,8 +61,12 @@ read_talus <- function(file, meta_file,
   #
   # convert protein abundance to a list of SumarizedExperiment instance
   #
-  se <- .make_se(tb, meta, split_by_fraction,
-                 which_run, which_fraction)
+  se <- .make_se(tb = tb,
+                 meta = meta,
+                 split_by_fraction = split_by_fraction,
+                 which_run = which_run,
+                 which_fraction = which_fraction,
+                 which_proteinid = which_proteinid)
 
   #
   # remove_few_measurements

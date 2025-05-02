@@ -1,8 +1,10 @@
 # .make_se() and .construct_se()
-.make_se <- function(tb, meta,
+.make_se <- function(tb,
+                     meta,
                      split_by_fraction,
-                     whic_run,
-                     which_fraction) {
+                     which_run,
+                     which_fraction,
+                     which_proteinid) {
   all_runs <- meta %>%
     pull(which_run)
 
@@ -64,11 +66,6 @@
                              colData=col_data,
                              metadata=col_data,
                              checkDimnames=TRUE)
-}
-
-.tidy_rownames <- function(se) {
-  # make sure rownames are unique
-
 }
 
 .remove_few_measurements <- function(x, threshold = 0.85) {

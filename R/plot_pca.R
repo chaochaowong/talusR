@@ -6,10 +6,14 @@
 #' @param top_n
 #' @param interest_group
 #' @import ggplot2
+#' @importFrom purrr map_dfr
+#'
 #' @author Chao-Jen Wong
 #' @export
 
 plot_pca <- function(se, top_n = 500, color_by) {
+
+  require(ggplot)
 
   if (is.list(se)) {
     pcs <- map_dfr(se, function(object) {
@@ -53,6 +57,11 @@ plot_pca <- function(se, top_n = 500, color_by) {
   # assembly the data for the plot
   df <- data.frame(PC1=pca$x[, 'PC1'],
                    PC2=pca$x[, 'PC2'],
-                   name=colnames(object), colData(object))
+                   name=colnames(object), colData(object),
+                   percent_var = paste(c('PC1:', 'PC2:'),
+                                        paste0(round(percentVar* 100)[1:2], '%'),
+                                       collapse = '; ')
+                   )
+  return(df)
 
 }

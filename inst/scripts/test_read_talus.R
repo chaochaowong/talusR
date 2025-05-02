@@ -2,11 +2,16 @@
 library(S4Vectors)
 library(SummarizedExperiment)
 library(rlang)
+library(dplyr)
+library(purrr)
+library(ggplot2)
 
+# devtools::install_github('chaochaowong/talusR')
+# library(talusR)
 
 work_dir <- file.path('///Volumes/sarthy_j/Sarthy/Sarthy_Lab/Proteomics')
 thp1_dir <- file.path(work_dir, 'talus_results/GB_THP1_anthras_20240716')
-data_dir <-file.path(work_dir, 'talus/GB_THP1_anthras_20240716/data')
+data_dir <- file.path(work_dir, 'talus/GB_THP1_anthras_20240716/data')
 file <- here::here(data_dir, 'THP1_proteinIDs_matrix.tsv')
 meta_file <- here::here(data_dir, 'THP1_meta_data.csv')
 
@@ -24,6 +29,7 @@ se <- read_talus(file = file,
 
 plot_pca(se, top_n = 1000, color_by = 'Frx')
 
+# split by Frx
 se_frac <- read_talus(file = file,
                  meta = meta_file,
                  which_proteinid = 'Protein.Ids',
@@ -35,7 +41,7 @@ se_frac <- read_talus(file = file,
                  log_transform = TRUE,
                  rowname_repair = TRUE)
 
-plot_pca(se_frac, top_n = 1000)
+plot_pca(se_frac, top_n = 1000, color_by = 'Tx')
 
 #
 # differential analysis
@@ -63,6 +69,11 @@ res_limma <- talus_limma(se_frac, design = ~ 0 + Tx)
 #
 # plot_per_protein
 #
+protein_id = 'P14923'
+#protein_id = 'Q9C010;Q9C010-2'
+protein_id = "A0AVT1;A0AVT1-3;A0AVT1-4"
+per_protein_abun(se_frac, protein_id = protein_id,
+                 category_by = 'Tx')
 
 #
 # plot_vocano
