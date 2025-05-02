@@ -8,6 +8,7 @@ VignetteBuilder: knitr
 BugReports: https://github.com/chaochaowong/talusR/issues
 Depends: R (>= 4.4.0), S4Vectors, SummarizedExperiment, limma, dplyr
 Imports: readr, ggplot2, stringr, rlang, purrr, tibble
+Suggests: knitr, rmarkdown, testthat, RColorBrewer
 License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
