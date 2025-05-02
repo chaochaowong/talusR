@@ -1,5 +1,4 @@
 # test_read_talus.R
-library(S4Vectors)
 library(SummarizedExperiment)
 library(rlang)
 library(dplyr)
@@ -18,7 +17,7 @@ meta_file <- here::here(data_dir, 'THP1_meta_data.csv')
 
 # test starts here
 se <- read_talus(file = file,
-                      meta = meta_file,
+                 meta = meta_file,
                       which_proteinid = 'Protein.Ids',
                       which_fraction = 'Frx',
                       which_sequence = NA,
@@ -61,7 +60,9 @@ se_frac <- lapply(se_frac, function(x) {
 # t Welch testing results
 #
 res_t <- talus_row_t_welch(se_frac, design = ~ 0 + Tx)
-
+writexl::write_xlsx(res_t[['chrom']],
+                    path = here::here(stat_dir,
+                                      'chrom-treatment-vs-DMSO-ttest.xlsx'))
 #
 # limma results
 #
@@ -70,16 +71,23 @@ res_limma <- talus_limma(se_frac, design = ~ 0 + Tx)
 writexl::write_xlsx(res_limma[['chrom']],
                     path = here::here(stat_dir,
                                       'chrom-treatment-vs-DMSO-limma.xlsx'))
+
 #
-# plot_per_protein
+# per protein plot
 #
-protein_id = 'P14923'
-#protein_id = 'Q9C010;Q9C010-2'
-protein_id = "A0AVT1;A0AVT1-3;A0AVT1-4"
+protein_id = 'Q969X6;Q969X6-2;Q969X6-3'
+#protein_id = "A0AVT1;A0AVT1-3;A0AVT1-4"
 per_protein_abun(se_frac, protein_id = protein_id,
                  category_by = 'Tx')
 
+per_protein_abun(se_frac[['chrom']], protein_id = protein_id,
+                 category_by = 'Tx') +
+  labs(title='UTP4')
+
 #
-# plot_vocano
+# plot_volcano?
 #
 
+#
+# differential abundance vs. DepMap
+#

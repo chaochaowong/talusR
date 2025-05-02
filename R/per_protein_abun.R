@@ -38,10 +38,10 @@ per_protein_abun <- function(se, protein_id, category_by) {
       )
   }
   else {
-    if( protein_id %in% rownames(se))
+    if (!protein_id %in% rownames(se))
       stop(sprintf("Protein ID '%s' not found.", protein_id))
 
-    df <- .plot_protein_abun(se, protein_id)
+    df <- .extract_per_protein_abun(se, protein_id)
     ggplot(df, aes_string(x = category_by, y = 'abundance')) +
       geom_point(size=2, alpha = 0.8, color='steelblue') +
       theme_bw() +

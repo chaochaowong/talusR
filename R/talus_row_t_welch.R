@@ -8,7 +8,11 @@
 #'
 #' @return Orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
 #' @author Chao-Jen Wong
+#'
 #' @importFrom matrixTests row_t_welch
+#' @importFrom tibble rownames_to_column
+#' @importFrom dplyr left_join arrange mutate rename
+#'
 #' @export
 talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
   require(matrixTests)
@@ -40,7 +44,7 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
   contrast <- colnames(mm)[-1]
   control_col <- as.logical(mm[, control, drop=TRUE])
 
-  res <- map_dfc(contrast, function(ct) {
+  res <- map(contrast, function(ct) {
     contrast_col <- as.logical(mm[, ct, drop=TRUE])
     res <- row_t_welch(x = assay[, contrast_col],
                        y = assay[, control_col])
@@ -48,13 +52,18 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
     res %>%
       dplyr::select(mean.x, mean.diff, statistic, pvalue) %>%
       dplyr::mutate(padj = p.adjust(pvalue, method = 'BH')) %>%
+      dplyr::arrange(padj) %>%
       dplyr::rename(avg_log2 = mean.x,
                     lfc = mean.diff) %>%
-      rename_with(~ paste0(ct, '_', .))
-  }) %>%
-    dplyr::mutate(control_mean  = rowMeans(assay[, control_col]),
-                  .before = 1) %>%
-    dplyr::rename(!!paste0(control, '_avg_log2') := control_mean)
+      rename_with(~ paste0(ct, '_', .)) %>%
+      dplyr::mutate(control_mean  = rowMeans(assay[, control_col]),
+                    .before = 1) %>%
+      dplyr::rename(!!paste0(control, '_avg_log2') := control_mean) %>%
+      rownames_to_column(var = 'id') %>%
+      dplyr::left_join(row_data, by = 'id')
+  })
+  names(res) <- paste0(contrast, '-vs-', control)
+
 
   return(res)
 }
