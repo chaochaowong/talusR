@@ -1,6 +1,9 @@
 #'
 #'
 #' @import limma
+#' @import SummarizedExperiment
+#' @importFrom tibble rownames_to_column
+#' @author Chao-Jen Wong
 #' @export
 talus_limma <- function(se, design = ~0 + Tx) {
   require(limma)
@@ -18,9 +21,14 @@ talus_limma <- function(se, design = ~0 + Tx) {
   return(res)
 }
 
-.wrap_limma <- function(x, design) {
-  col_data <- colData(x)
-  assay <- assay(x)
+.wrap_limma <- function(object, design) {
+  # assemble row_data to be join to the output of topTable()
+  row_data <- as.data.frame(rowData(object)) %>%
+    tibble::rownames_to_column(var='id')
+
+  # assemble contrast model matrix
+  col_data <- colData(object)
+  assay <- assay(object)
   mm <- model.matrix(design, data = col_data)
   fit <- lmFit(assay, mm)
   control <- colnames(mm)[1]
@@ -44,7 +52,9 @@ talus_limma <- function(se, design = ~0 + Tx) {
   # make data.frame
   top_table <- lapply(names(contrast_exprs), function(conts) {
     topTable(fit2, coef = conts, number = nrow(assay),
-             sort.by = 'P')
+             sort.by = 'P') %>%
+      tibble::rownames_to_column(var='id') %>%
+      dplyr::left_join(row_data, by = 'id')
   })
   names(top_table) <- names(contrast_exprs)
 

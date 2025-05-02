@@ -27,7 +27,12 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
 
 .wrap_row_t_welch <- function(object,
                               design) {
-  col_data <- colData(ojbect)
+  # assemble row_data to be join to the output of topTable()
+  row_data <- as.data.frame(rowData(x)) %>%
+    tibble::rownames_to_column(var='id')
+
+  # assemble model matrix
+  col_data <- colData(object)
   assay <- assay(object)
   mm <- model.matrix(design, data = col_data)
 

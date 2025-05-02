@@ -12,6 +12,7 @@ library(ggplot2)
 work_dir <- file.path('///Volumes/sarthy_j/Sarthy/Sarthy_Lab/Proteomics')
 thp1_dir <- file.path(work_dir, 'talus_results/GB_THP1_anthras_20240716')
 data_dir <- file.path(work_dir, 'talus/GB_THP1_anthras_20240716/data')
+stat_dir <- file.path(thp1_dir, 'stats')
 file <- here::here(data_dir, 'THP1_proteinIDs_matrix.tsv')
 meta_file <- here::here(data_dir, 'THP1_meta_data.csv')
 
@@ -59,13 +60,16 @@ se_frac <- lapply(se_frac, function(x) {
 #
 # t Welch testing results
 #
-res_t <- talus_row_t_welch(se, design = ~ 0 + Tx)
+res_t <- talus_row_t_welch(se_frac, design = ~ 0 + Tx)
 
 #
 # limma results
 #
 res_limma <- talus_limma(se_frac, design = ~ 0 + Tx)
 
+writexl::write_xlsx(res_limma[['chrom']],
+                    path = here::here(stat_dir,
+                                      'chrom-treatment-vs-DMSO-limma.xlsx'))
 #
 # plot_per_protein
 #
