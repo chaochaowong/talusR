@@ -2,9 +2,10 @@
 #'
 #' This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
 #'
-#' @param se
-#' @param top_n
-#' @param interest_group
+#' @param se a \code{SummarizedExperiment} (or a list) instances storing Talus data
+#' @param top_n number of top proteins to use for principal components, selected by highest row variance
+#' @param color_by a character string in colData to use for coloring
+#'
 #' @import ggplot2
 #' @importFrom purrr map_dfr
 #'

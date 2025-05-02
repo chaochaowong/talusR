@@ -1,10 +1,12 @@
 Package: talusR
 Title: Tools facilitating Talus data analysis
-Version: 0.0.0.9000
+Version: 0.0.99
 Authors@R: 
     person("Choa-Jen", "Wong", , "chao-jen.wong@seattlechildrens.org", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>=4.4.0), S4Vectors, SummarizedExperiment, limma, dplyr
+Description: Tools facilitating Talus data import and analysis.
+VignetteBuilder: knitr
+BugReports: https://github.com/chaochaowong/talusR/issues
+Depends: R (>= 4.4.0), S4Vectors, SummarizedExperiment, limma, dplyr
 Imports: readr, ggplot2, stringr, rlang, purrr, tibble
 License: `use_mit_license()`
 Encoding: UTF-8

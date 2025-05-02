@@ -4,9 +4,10 @@ author:
   - name: "Chao-Jen Wong"
     affiliation: "Seattle Children's Research Institute"
     email: chao-jen.wong@seattlechildrens.org
+date: "`r Sys.Date()`"
 output:
-  BiocStyle::html_vignette:
-    toc: true
+  BiocStyle::html_document:
+    toc_float: true
     number_sections: true
 vignette: >
   %\VignetteIndexEntry{Introduction to talusR}
@@ -17,6 +18,11 @@ vignette: >
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(
+  eval = TRUE, 
+  echo = TRUE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.align = 'center',
   collapse = TRUE,
   comment = "#>",
   fig.width = 6,
