@@ -7,12 +7,12 @@
 talus_row_t_welch(se, design = ~0 + Tx)
 }
 \arguments{
-\item{se}{A \code{SummarizedExperiment} instance with log-transform assays}
+\item{se}{a \code{SummarizedExperiment} instance with log-transform assays}
 
-\item{design}{A formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
+\item{design}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
 }
 \value{
-Orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
+orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
 }
 \description{
 A wrapping of

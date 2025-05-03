@@ -3,15 +3,15 @@
 #' A wrapping of
 #' SummarizedExperiment instances with three layers: nuc, cyto, and plasm.
 #'
-#' @param se A \code{SummarizedExperiment} instance with log-transform assays
-#' @param design A formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
+#' @param se a \code{SummarizedExperiment} instance with log-transform assays
+#' @param design a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
 #'
-#' @return Orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
+#' @return orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
 #' @author Chao-Jen Wong
 #'
 #' @importFrom matrixTests row_t_welch
 #' @importFrom tibble rownames_to_column
-#' @importFrom dplyr left_join arrange mutate rename
+#' @import dplyr
 #'
 #' @export
 talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
@@ -31,6 +31,7 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
 
 .wrap_row_t_welch <- function(object,
                               design) {
+  require(dplyr)
   # assemble row_data to be join to the output of topTable()
   row_data <- as.data.frame(rowData(x)) %>%
     tibble::rownames_to_column(var='id')

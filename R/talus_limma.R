@@ -1,4 +1,8 @@
+#' Wrapper function of limma for differential analysis
 #'
+#' A wrapper function using lmFit() to perform differential analysis
+#' @param se a \code{SummarizedExperiment} instance containing protein log-transform assays
+#' @param desgin a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
 #'
 #' @import limma
 #' @import SummarizedExperiment

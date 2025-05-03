@@ -16,8 +16,10 @@
 #' @return A \code{SummarizedExperiment} objects with three layers of assay data
 #'
 #' @importFrom rlang has_name
+#' @importFrom readr read_delim read_csv
 #' @importFrom purrr map
 #' @import SummarizedExperiment
+#' @import dplyr
 #' @export
 read_talus <- function(file, meta_file,
                        which_proteinid = 'Protein.Ids',
@@ -33,6 +35,7 @@ read_talus <- function(file, meta_file,
   # assume 1) file is in tsv format 2) meta_data is in csv format
   require(readr)
   require(SummarizedExperiment)
+  require(dplyr)
 
   tb <- read_delim(file, delim='\t')
   meta <- read_csv(meta_file)
