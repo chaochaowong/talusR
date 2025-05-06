@@ -13,6 +13,8 @@
 #'
 #' @author Chao-Jen Wong
 #'
+#' @export
+#'
 per_protein_abun <- function(se, protein_id, category_by) {
   # check if protein_id exist as part of the rownames
   require(ggplot2)
