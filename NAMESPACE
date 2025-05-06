@@ -2,6 +2,7 @@
 
 export(plot_pca)
 export(read_talus)
+export(summary_talus)
 export(talus_limma)
 export(talus_row_t_welch)
 import(SummarizedExperiment)
