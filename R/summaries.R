@@ -1,17 +1,16 @@
 #' Summary of Talus limma results
 #'
 #' Summarize Talus limma results returned by \code{talus_limma}
-#' @param objecta list of \code{data.frame} containing limma's \code{lmFit} results of all contrasts.
-#' @param alpha  the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.
+#' @param objecta a list of \code{data.frame} containing limma's \code{lmFit} results of all contrasts.
+#' @param alpha the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.
 #' @param lfc_threshold a non-negative values of significance log fold change threshold for independent filtering. Default to NULL.
-#' @param retrun_data return filtered features that meet \code{alpha} or \code{lfc_threshold}.
 #'
 #' @importFrom purrr map
 #' @importFrom dplyr filter
 #' @export
 summary_limma <- function(object,
                           alpha = NULL,
-                          lfc_threshold = NULL,
+                          lfc_threshold = NULL
                           ) {
   if (is.null(alpha) && is.null(lfc_threshold)) {
     stop(
@@ -20,22 +19,26 @@ summary_limma <- function(object,
     )
   }
 
-  if (is.list(object)) {
+  #if (is.list(object)) {
+    # object should be a list
     # get the filtered data.frame
     obj_filt <- map(object, summary_per_contrast, alpha, lfc_threshold)
     # display message
     obj_filt <- map2(object, names(object), display_summary,
                      alpha, lfc_threshold)
 
-  }
+  #}
+
 
   return(obj_filt)
 }
 
 
 
-display_summary <- function(res, contrast_name,
-                            alpha, lfc_threshold) {
+display_summary <- function(res,
+                            contrast_name,
+                            alpha,
+                            lfc_threshold) {
 
   filt <- res
   if (!is.null(alpha))

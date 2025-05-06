@@ -72,6 +72,13 @@ writexl::write_xlsx(res_limma[['chrom']],
                     path = here::here(stat_dir,
                                       'chrom-treatment-vs-DMSO-limma.xlsx'))
 
+chrom_filt <- summary_limma(res_limma[['chrom']],
+                      alpha = 0.05,
+                      lfc_threshold = 1)
+
+writexl::write_xlsx(chrom_filt,
+                    path = here::here(stat_dir,
+                                      'chrom-treatment-vs-DMSO-limma-significance.xlsx'))
 #
 # per protein plot
 #
