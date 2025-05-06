@@ -1,6 +1,6 @@
-#' Summary of Talus limma results
+#' Summary of Talus differential results
 #'
-#' Summarize Talus limma results returned by \code{talus_limma}
+#' Summarize Talus differential results returned by either by \code{talus_limma} or \code{talus_row_t_walch}.
 #' @param objecta a list of \code{data.frame} containing limma's \code{lmFit} results of all contrasts.
 #' @param alpha the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.
 #' @param lfc_threshold a non-negative values of significance log fold change threshold for independent filtering. Default to NULL.
@@ -8,7 +8,7 @@
 #' @importFrom purrr map
 #' @importFrom dplyr filter
 #' @export
-summary_limma <- function(object,
+summary_talus <- function(object,
                           alpha = NULL,
                           lfc_threshold = NULL
                           ) {
@@ -24,7 +24,7 @@ summary_limma <- function(object,
     # get the filtered data.frame
     obj_filt <- map(object, summary_per_contrast, alpha, lfc_threshold)
     # display message
-    obj_filt <- map2(object, names(object), display_summary,
+    obj_filt <- map2(object, names(object), display_summary_talus,
                      alpha, lfc_threshold)
 
   #}
@@ -35,7 +35,8 @@ summary_limma <- function(object,
 
 
 
-display_summary <- function(res,
+
+display_summary_talus <- function(res,
                             contrast_name,
                             alpha,
                             lfc_threshold) {
@@ -55,7 +56,45 @@ display_summary <- function(res,
   n_zero         <- sum(filt$logFC == 0, na.rm = TRUE)
 
   # print a summary
-  cat(contrast_name,':\n\n')
+  cat(contrast_name, ':\n\n')
+  cat(sprintf('Threshold: alpha < %s; |lfc_threshod| > %s\n',
+              if (is.null(alpha)) "NULL" else alpha,
+              if (is.null(lfc_threshold)) "NULL" else lfc_threshold))
+  cat(
+    sprintf(
+      "Total features: %d\nUp-regulated:   %d\n",
+      total_features, n_up
+    ),
+    sprintf("Down-regulated: %d\n", n_down),
+    if (n_zero > 0) sprintf("No change:   %d\n", n_zero) else "",
+    sep = ""
+  )
+
+  cat('\n')
+  return(filt)
+}
+
+display_summary_twalch <- function(res,
+                                  contrast_name,
+                                  alpha,
+                                  lfc_threshold) {
+
+  filt <- res
+  if (!is.null(alpha))
+    filt <- filt %>%
+      dplyr::filter(adj.P.Val< alpha)
+
+  if (!is.null(lfc_threshold))
+    filt <- filt %>%
+      dplyr::filter(abs(logFC) > abs(lfc_threshold))
+
+  total_features <- nrow(res)
+  n_up           <- sum(filt$logFC >  0, na.rm = TRUE)
+  n_down         <- sum(filt$logFC <  0, na.rm = TRUE)
+  n_zero         <- sum(filt$logFC == 0, na.rm = TRUE)
+
+  # print a summary
+  cat(contrast_name, ':\n\n')
   cat(sprintf('Threshold: alpha < %s; |lfc_threshod| > %s\n',
               if (is.null(alpha)) "NULL" else alpha,
               if (is.null(lfc_threshold)) "NULL" else lfc_threshold))

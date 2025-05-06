@@ -60,25 +60,35 @@ se_frac <- lapply(se_frac, function(x) {
 # t Welch testing results
 #
 res_t <- talus_row_t_welch(se_frac, design = ~ 0 + Tx)
+
+# summary_talus() can only do one fraction at once
+chrom_filt <-
+  summary_talus(res_t[['chrom']],
+                alpha = 0.05,
+                lfc_threshold = 0.5)
+
 writexl::write_xlsx(res_t[['chrom']],
                     path = here::here(stat_dir,
                                       'chrom-treatment-vs-DMSO-ttest.xlsx'))
+writexl::write_xlsx(chrom_filt,
+                    path = here::here(stat_dir,
+                                      'chrom-treatment-vs-DMSO-ttest-significance-lfc0.5-alpha5e-2.xlsx'))
+#
 #
 # limma results
 #
 res_limma <- talus_limma(se_frac, design = ~ 0 + Tx)
+chrom_filt <-
+  summary_talus(res_limma[['chrom']],
+                alpha = 0.05,
+                lfc_threshold = 0.5)
 
 writexl::write_xlsx(res_limma[['chrom']],
                     path = here::here(stat_dir,
                                       'chrom-treatment-vs-DMSO-limma.xlsx'))
-
-chrom_filt <- summary_limma(res_limma[['chrom']],
-                      alpha = 0.05,
-                      lfc_threshold = 1)
-
 writexl::write_xlsx(chrom_filt,
                     path = here::here(stat_dir,
-                                      'chrom-treatment-vs-DMSO-limma-significance.xlsx'))
+                                      'chrom-treatment-vs-DMSO-limma-significance-lfc0.5-alpha5e-2.xlsx'))
 #
 # per protein plot
 #

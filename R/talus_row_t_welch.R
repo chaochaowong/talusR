@@ -33,7 +33,7 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
                               design) {
   require(dplyr)
   # assemble row_data to be join to the output of topTable()
-  row_data <- as.data.frame(rowData(x)) %>%
+  row_data <- as.data.frame(rowData(object)) %>%
     tibble::rownames_to_column(var='id')
 
   # assemble model matrix
@@ -51,17 +51,14 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
                        y = assay[, control_col])
     # tidy up
     res %>%
-      dplyr::select(mean.x, mean.diff, statistic, pvalue) %>%
-      dplyr::mutate(padj = p.adjust(pvalue, method = 'BH')) %>%
-      dplyr::arrange(padj) %>%
-      dplyr::rename(avg_log2 = mean.x,
-                    lfc = mean.diff) %>%
-      rename_with(~ paste0(ct, '_', .)) %>%
-      dplyr::mutate(control_mean  = rowMeans(assay[, control_col]),
-                    .before = 1) %>%
-      dplyr::rename(!!paste0(control, '_avg_log2') := control_mean) %>%
+      dplyr::select(mean.x, mean.y, mean.diff, statistic, pvalue) %>%
+      dplyr::mutate(adj.P.Val = p.adjust(pvalue, method = 'BH')) %>%
+      dplyr::arrange(adj.P.Val) %>%
+      dplyr::rename(!!paste0(control, '_avg_log') := mean.y,
+                    !!paste0(ct, '_avg_log') := mean.x,
+                    logFC = mean.diff) %>%
       rownames_to_column(var = 'id') %>%
-      dplyr::left_join(row_data, by = 'id')
+      dplyr::left_join(row_data, by = 'id') # append annotation
   })
   names(res) <- paste0(contrast, '-vs-', control)
 
