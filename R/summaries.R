@@ -1,6 +1,6 @@
 #' Summary of Talus differential results
 #'
-#' Summarize Talus differential results returned by either by \code{talus_limma} or \code{talus_row_t_walch}.
+#' Summarize Talus differential results returned by either by \code{talus_limma} or \code{talus_row_t_welch}.
 #' @param objecta a list of \code{data.frame} containing limma's \code{lmFit} results of all contrasts.
 #' @param alpha the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.
 #' @param lfc_threshold a non-negative values of significance log fold change threshold for independent filtering. Default to NULL.
