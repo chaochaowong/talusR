@@ -49,5 +49,35 @@ TalusDataSet <- function(abund_data, col_data, row_data,
   # we expect a matrix of counts, which are non-negative integers
   abund_ata <- as.matrix(abund_ata )
 
+  if (is(col_ata, "data.frame"))
+    col_data <- as(col_data, "DataFrame")
+
+  if (is(row_ata, "data.frame"))
+    row_data <- as(row_data, "DataFrame")
+
+  # check if the rownames of colData are simply in different order
+  # than the colnames of the countData, if so throw an error
+  # as the user probably should investigate what's wrong
+  if (!is.null(rownames(col_data)) & !is.null(colnames(abund_data))) {
+    if (all(sort(rownames(col_data)) == sort(colnames(abound_data)))) {
+      if (!all(rownames(col_data) == colnames(abound_data))) {
+        stop(paste("rownames of the col_data:
+  ",paste(rownames(col_data), collapse=","), "
+  are not in the same order as the colnames of the countData:
+  ",paste(colnames(abund_ata), collapse=",")))
+      }
+    }
+  }
+
+  if (is.null(rownames(col_data)) & !is.null(colnames(abund_data))) {
+    rownames(col_data) <- colnames(abund_ata)
+  }
+
+  se <- SummarizedExperiment(assays = SimpleList(abund=abund_data),
+                             colData = col_data,
+                             rowData = row_data)
+  new("TalusDataSet", se,
+      intensity_group = intensity,
+      metric = metric)
 }
 
