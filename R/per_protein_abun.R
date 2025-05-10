@@ -33,7 +33,7 @@ per_protein_abun <- function(se, protein_id, category_by) {
     ggplot(df, aes_string(x = category_by, y = 'abundance')) +
       geom_point(size=2, alpha = 0.8, color='steelblue') +
       theme_bw() +
-      facet_wrap(~source, ncol = 1) +
+      facet_wrap(~source, ncol = 1, scales = 'free_y') +
       labs(title = protein_id) +
       theme(
         panel.grid.minor = element_blank()
