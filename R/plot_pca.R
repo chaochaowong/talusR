@@ -27,7 +27,7 @@ plot_pca <- function(se, top_n = 500, color_by) {
 
     ggplot(pcs, aes_string(x="PC1", y="PC2", color=color_by)) +
       geom_point(size=2, alpha=0.8) +
-      facet_wrap(~ source, nrow=2) +
+      facet_wrap(~ source, nrow=2, scales='free') +
       theme_bw() +
       theme(legend.position    = c(0.7, 0.2))
   }
