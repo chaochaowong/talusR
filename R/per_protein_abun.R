@@ -1,5 +1,7 @@
 #' Simple point plot to show per-protein aboundance
 #'
+#' Given a protein ID, plot the MS intensity signal
+#'
 #' @param se SummarizedExperience instance (SE) or list of SE containing the transformed protein abundance.
 #' @param protein_id Protein ID
 #' @param group_by Group by a factor in the meta file
