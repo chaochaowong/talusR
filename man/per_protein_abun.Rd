@@ -14,7 +14,7 @@ per_protein_abun(se, protein_id, category_by)
 \item{group_by}{Group by a factor in the meta file}
 }
 \description{
-Simple point plot to show per-protein aboundance
+Given a protein ID, plot the MS intensity signal
 }
 \author{
 Chao-Jen Wong

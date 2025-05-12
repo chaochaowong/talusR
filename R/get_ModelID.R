@@ -8,7 +8,7 @@
 #' @examples
 #' get_ModelID('THP1')
 #'
-#' @import deplyr
+#' @import dplyr
 #' @export
 
 
