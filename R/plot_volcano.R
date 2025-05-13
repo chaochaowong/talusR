@@ -79,7 +79,8 @@ plot_volcano <- function(res, alpha = 0.05,
 }
 
 .pre_plot_vocano <- function(df, which_p = 'adj.P.Val',
-                             lfc_threshold,
+                             lfc_threshold = 0.5,
+                             alpha = 0.05,
                              label_top_n = 10) {
 
   y_lab <- bquote(-log[10] ~ (.(as.name(which_p))))
