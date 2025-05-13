@@ -41,7 +41,7 @@ plot_volcano <- function(res, alpha = 0.05,
       facet_wrap( ~contrast_name, ncol=2)
 
   } else {
-    df <- .add_logp_and_sig(res)
+    df <- .add_logp_and_sig(res, which_p = which_p)
 
     # ggplot
     gg <- .pre_plot_vocano(df, which_p = which_p,
@@ -55,7 +55,7 @@ plot_volcano <- function(res, alpha = 0.05,
 
 }
 
-.add_logp_and_sig <- function(x, which_p) {
+.add_logp_and_sig <- function(x, which_p = 'adj.P.Val') {
   x %>%
     dplyr::mutate(
       logp = -log10(.data[[which_p]])) %>%
@@ -68,7 +68,8 @@ plot_volcano <- function(res, alpha = 0.05,
 
 }
 
-.pre_plot_vocano <- function(df, label_top_n = 10) {
+.pre_plot_vocano <- function(df, which_p = 'adj.P.Val',
+                             label_top_n = 10) {
   ggplot(df, aes(x = logFC, y = logp, color = sig)) +
     geom_point(alpha = 0.6, size = 1.5, show.legend = FALSE) +
     # 3. Add threshold lines
