@@ -28,7 +28,11 @@ plot_volcano <- function(res, alpha = 0.05,
   which_p <- if_else(use_adjP, 'adj.P.Val', 'P.Value')
 
   if (is.list(res)) {
-    df <- map_dfr(res, .add_logp_and_sig, .id='contrast_name')
+    df <- map_dfr(res, .add_logp_and_sig,
+                  which_p = which_p,
+                  lfc_threshold = lfc_threshold,
+                  alpha = alpha,
+                  .id='contrast_name')
 
     if (!is.null(contrast_levels))
       df <- df %>%
@@ -37,14 +41,18 @@ plot_volcano <- function(res, alpha = 0.05,
 
     # ggplot
     gg <- .pre_plot_vocano(df, which_p = which_p,
+                           lfc_threshold = lfc_threshold,
                            label_top_n = label_top_n) +
       facet_wrap( ~contrast_name, ncol=2)
 
   } else {
-    df <- .add_logp_and_sig(res, which_p = which_p)
+    df <- .add_logp_and_sig(res, which_p = which_p,
+                            lfc_threshold = lfc_threshold,
+                            alpha = alpha)
 
     # ggplot
     gg <- .pre_plot_vocano(df, which_p = which_p,
+                           lfc_threshold = lfc_threshold,
                            label_top_n = label_top_n)
   }
 
@@ -55,20 +63,23 @@ plot_volcano <- function(res, alpha = 0.05,
 
 }
 
-.add_logp_and_sig <- function(x, which_p = 'adj.P.Val') {
+.add_logp_and_sig <- function(x, which_p = 'adj.P.Val',
+                              lfc_threshold = 0.5,
+                              alpha = 0.05) {
   x %>%
     dplyr::mutate(
       logp = -log10(.data[[which_p]])) %>%
     dplyr::mutate(
       sig  = case_when(
-        .data[[which_p]] < 0.05 & logFC >  0.5  ~ "Up",
-        .data[[which_p]] < 0.05 & logFC < -0.5  ~ "Down",
+        .data[[which_p]] < alpha & logFC >  lfc_threshold  ~ "Up",
+        .data[[which_p]] < alpha & logFC < -lfc_threshold  ~ "Down",
         TRUE                        ~ "NS")
     )
 
 }
 
 .pre_plot_vocano <- function(df, which_p = 'adj.P.Val',
+                             lfc_threshold,
                              label_top_n = 10) {
   ggplot(df, aes(x = logFC, y = logp, color = sig)) +
     geom_point(alpha = 0.6, size = 1.5, show.legend = FALSE) +
