@@ -10,6 +10,8 @@
 #' @importFrom purrr map_dfr
 #'
 #' @author Chao-Jen Wong
+#' @examples
+#'
 #' @export
 
 plot_pca <- function(se, top_n = 500, color_by) {
