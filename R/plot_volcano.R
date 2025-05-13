@@ -81,6 +81,9 @@ plot_volcano <- function(res, alpha = 0.05,
 .pre_plot_vocano <- function(df, which_p = 'adj.P.Val',
                              lfc_threshold,
                              label_top_n = 10) {
+
+  y_lab <- bquote(-log[10] ~ (.(as.name(which_p))))
+
   ggplot(df, aes(x = logFC, y = logp, color = sig)) +
     geom_point(alpha = 0.6, size = 1.5, show.legend = FALSE) +
     # 3. Add threshold lines
@@ -107,7 +110,7 @@ plot_volcano <- function(res, alpha = 0.05,
     theme_bw() +
     labs(
       x     = expression(log[2]~Fold~Change),
-      y     = expression(-log[10]~(p.value)),
-      title = "Volcano Plot") +
+      y     = y_lab
+     ) +
     theme(panel.grid.minor = element_blank())
 }
