@@ -42,7 +42,8 @@ plot_volcano <- function(res, alpha = 0.05,
     # ggplot
     gg <- .pre_plot_vocano(df, which_p = which_p,
                            lfc_threshold = lfc_threshold,
-                           label_top_n = label_top_n) +
+                           label_top_n = label_top_n,
+                           alpha = alpha) +
       facet_wrap( ~contrast_name, ncol=2)
 
   } else {
@@ -53,7 +54,8 @@ plot_volcano <- function(res, alpha = 0.05,
     # ggplot
     gg <- .pre_plot_vocano(df, which_p = which_p,
                            lfc_threshold = lfc_threshold,
-                           label_top_n = label_top_n)
+                           label_top_n = label_top_n,
+                           alpha = alpha)
   }
 
   if (return_data)
