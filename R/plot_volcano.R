@@ -17,6 +17,7 @@
 #' @author Chao-Jen Wong
 #' @examples
 #'
+#' @export
 plot_volcano <- function(res, alpha = 0.05,
                          lfc_threshold = 0.5,
                          use_adjP = TRUE,
