@@ -36,14 +36,16 @@ plot_volcano <- function(res, alpha = 0.05,
                                              levels = contrast_levels))
 
     # ggplot
-    gg <- .pre_plot_vocano(df, label_top_n = label_top_n) +
+    gg <- .pre_plot_vocano(df, which_p = which_p,
+                           label_top_n = label_top_n) +
       facet_wrap( ~contrast_name, ncol=2)
 
   } else {
     df <- .add_logp_and_sig(res)
 
     # ggplot
-    gg <- .pre_plot_vocano(df, label_top_n = label_top_n)
+    gg <- .pre_plot_vocano(df, which_p = which_p,
+                           label_top_n = label_top_n)
   }
 
   if (return_data)
@@ -53,7 +55,7 @@ plot_volcano <- function(res, alpha = 0.05,
 
 }
 
-.add_logp_and_sig <- function(x) {
+.add_logp_and_sig <- function(x, which_p) {
   x %>%
     dplyr::mutate(
       logp = -log10(.data[[which_p]])) %>%
