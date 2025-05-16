@@ -22,9 +22,9 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
   if (is.list(se)) {
     res <- lapply(se, .wrap_row_t_welch, design)
     names(res) <- names(se)
-  }
-  else
+  } else {
     res <- .wrap_row_t_welch(se, design)
+  }
 
   return(res)
 }
@@ -34,7 +34,7 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
   require(dplyr)
   # assemble row_data to be join to the output of topTable()
   row_data <- as.data.frame(rowData(object)) %>%
-    tibble::rownames_to_column(var='id')
+    tibble::rownames_to_column(var = "id")
 
   # assemble model matrix
   col_data <- colData(object)
@@ -43,24 +43,27 @@ talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
 
   control <- colnames(mm)[1]
   contrast <- colnames(mm)[-1]
-  control_col <- as.logical(mm[, control, drop=TRUE])
+  control_col <- as.logical(mm[, control, drop = TRUE])
 
   res <- map(contrast, function(ct) {
-    contrast_col <- as.logical(mm[, ct, drop=TRUE])
-    res <- row_t_welch(x = assay[, contrast_col],
-                       y = assay[, control_col])
+    contrast_col <- as.logical(mm[, ct, drop = TRUE])
+    res <- row_t_welch(
+      x = assay[, contrast_col],
+      y = assay[, control_col]
+    )
     # tidy up
     res %>%
       dplyr::select(mean.x, mean.y, mean.diff, statistic, pvalue) %>%
-      dplyr::mutate(adj.P.Val = p.adjust(pvalue, method = 'BH')) %>%
+      dplyr::mutate(adj.P.Val = p.adjust(pvalue, method = "BH")) %>%
       dplyr::arrange(adj.P.Val) %>%
-      dplyr::rename(!!paste0(control, '_avg_log') := mean.y,
-                    !!paste0(ct, '_avg_log') := mean.x,
-                    logFC = mean.diff) %>%
-      rownames_to_column(var = 'id') %>%
-      dplyr::left_join(row_data, by = 'id') # append annotation
+      dplyr::rename(!!paste0(control, "_avg_log") := mean.y,
+        !!paste0(ct, "_avg_log") := mean.x,
+        logFC = mean.diff
+      ) %>%
+      rownames_to_column(var = "id") %>%
+      dplyr::left_join(row_data, by = "id") # append annotation
   })
-  names(res) <- paste0(contrast, '-vs-', control)
+  names(res) <- paste0(contrast, "-vs-", control)
 
 
   return(res)

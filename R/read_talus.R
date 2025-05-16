@@ -22,26 +22,24 @@
 #' @import dplyr
 #' @export
 read_talus <- function(file, meta_file,
-                       which_proteinid = 'Protein.Ids',
-                       which_fraction = 'Frx',
+                       which_proteinid = "Protein.Ids",
+                       which_fraction = "Frx",
                        which_sequence = NA,
-                       which_run = 'Run',
+                       which_run = "Run",
                        remove_few_measurements = TRUE,
                        split_by_fraction = TRUE,
                        log_transform = TRUE,
-                       rowname_repair = TRUE
-                       ) {
-
+                       rowname_repair = TRUE) {
   # assume 1) file is in tsv format 2) meta_data is in csv format
   require(readr)
   require(SummarizedExperiment)
   require(dplyr)
 
-  tb <- read_delim(file, delim='\t')
+  tb <- read_delim(file, delim = "\t")
   meta <- read_csv(meta_file)
 
   # check which_run column exists in meta
-  if (! rlang::has_name(meta, which_run)) {
+  if (!rlang::has_name(meta, which_run)) {
     stop(sprintf("which_run: column '%s' not found in %s", which_run, meta_file))
   }
 
@@ -63,30 +61,35 @@ read_talus <- function(file, meta_file,
 
   # check if run in meta match what's in file (tb)
   if (!all(rlang::has_name(tb, runs))) {
-    stop(sprintf("Runs ID %s not found in %s",
-                 paste(runs[!has_name(tb, runs)], collapse = ','),
-                 file))
+    stop(sprintf(
+      "Runs ID %s not found in %s",
+      paste(runs[!has_name(tb, runs)], collapse = ","),
+      file
+    ))
   }
 
 
   #
   # convert protein abundance to a list of SumarizedExperiment instance
   #
-  se <- .make_se(tb = tb,
-                 meta = meta,
-                 split_by_fraction = split_by_fraction,
-                 which_run = which_run,
-                 which_fraction = which_fraction,
-                 which_proteinid = which_proteinid)
+  se <- .make_se(
+    tb = tb,
+    meta = meta,
+    split_by_fraction = split_by_fraction,
+    which_run = which_run,
+    which_fraction = which_fraction,
+    which_proteinid = which_proteinid
+  )
 
   #
   # remove_few_measurements
   #
   if (remove_few_measurements) {
-    if (is.list(se))
+    if (is.list(se)) {
       se <- lapply(se, .remove_few_measurements, threshold = 0.85)
-    else
+    } else {
       se <- .remove_few_measurements(se, threshold = 0.85)
+    }
   }
 
   #
