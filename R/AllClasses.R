@@ -46,7 +46,7 @@ setValidity("TalusDataSet", function(object) {
 #' @return a \code{TalusDataSet} object.
 #' @export
 #'
-#' @rdname DESeqDataSet
+#' @rdname TalusDataSet
 #' @docType class
 #' @aliases TalusDataSet TalusDataSet-class
 TalusDataSet <- function(assay_data, col_data, row_data,
