@@ -104,7 +104,7 @@ read_talus <- function(file, meta_file,
   #
   # convert protein abundance to a list of SumarizedExperiment instance
   #
-  se <- .make_se(
+  tds <- .make_tds(
     tb = tb,
     meta = meta,
     split_by_fraction = split_by_fraction,

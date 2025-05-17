@@ -1,43 +1,49 @@
 # .make_se() and .construct_se()
-.make_se <- function(tb,
-                     meta,
-                     split_by_fraction,
-                     which_run,
-                     which_fraction,
-                     which_proteinid,
-                     intensity_group = "protein",
-                     metric = "DIA-NN") {
+.make_tds <- function(tb,
+                      meta,
+                      split_by_fraction,
+                      which_run,
+                      which_fraction,
+                      which_proteinid,
+                      intensity_group = "protein",
+                      metric = "DIA-NN",
+                      log_transform = 'log2') {
+
   all_runs <- meta %>%
     pull(which_run)
 
   if (split_by_fraction) {
-    se <- meta %>%
+    tds <- meta %>%
       split(.[[which_fraction]]) %>%       # named list by Fraction values
       map(function(sub_meta) {
         .construct_tds(sub_meta,
                       which_run,
                       tb,
                       which_proteinid,
-                      all_runs)
+                      all_runs,
+                      intensity_group,
+                      metric,
+                      log_transform)
       })
-
+    tds <- TalusDataSetList(tds)
     # TODO? clean up rownames: one single protein.ID ??
 
   }
 
 
   if (!split_by_fraction) {
-    se <- .construct_tds(meta,
-                        which_run,
-                        tb,
-                        which_proteinid,
-                        all_runs,
-                        intensity_group,
-                        metric)
+    tds <- .construct_tds(meta,
+                          which_run,
+                          tb,
+                          which_proteinid,
+                          all_runs,
+                          intensity_group,
+                          metric,
+                          log_transform)
 
   }
 
-  return(se)
+  return(tds)
 }
 
 
@@ -48,7 +54,8 @@
                           which_proteinid,
                           all_runs,
                           intensity_group = "protein",
-                          metric = "DIA-NN") {
+                          metric = "DIA-NN",
+                          log_transform = 'log2') {
   offset = 1
   runs <- sub_meta[[which_run]]
   # assay

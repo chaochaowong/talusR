@@ -115,17 +115,19 @@ setValidity("TalusDataSetList", function(x) {
 
 #' TalusDataSetList object and constructors
 #'
-#' \code{TalusDataSetList}
+#' \code{TalusDataSetList} is a \code{SimpleList} object of \code{TalusDataSet}. The constructor convert a list of \code{TalusDataSet} objects to a \code{SimpleList} object.
+#'
+#' @param lst A list of \code{TalusDataSet} objects.
 #' @return a \code{TalusDataSetList} object.
 #'
 #' @export
-#' @rdname TalusDataList
+#' @rdname TalusDataSetList
 #' @docType class
 #' @aliases TalusDataSetList TalusDataSetList-class
 #' @author Chao-Jen Wong
-TalusDataSetList <- function(...) {
+TalusDataSetList <- function(lst) {
   # turn the dots into a FlatList, then coerce to your new class
-  lst <- SimpleList(...)
+  lst <- SimpleList(lst)
   as(lst, "TalusDataSetList")
 }
 
