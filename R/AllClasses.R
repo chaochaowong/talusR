@@ -4,20 +4,16 @@
 # 1) Define class
 setClass(
   "TalusDataSet", # your new class name
-  contains = "SummarizedExperiment", # inherit all the SE machinery
-  slots = list(
-    intensity_group = "character", # protein or peptide
-    metric = "character" # DIA-NN
-  )
+  contains = "SummarizedExperiment" # inherit all the SE machinery
 )
 
 # 2) validity
 setValidity("TalusDataSet", function(object) {
-  if (!("abund" %in% assayNames(object))) {
+  if (!("abundance" %in% assayNames(object))) {
     return("the assays slot must contain a matrix named 'abound'")
   }
 
-  ig <- object@intensity_group
+  ig <- metadata(object)$intensity_group
   # require exactly one value, and it must be "protein" or "peptide"
   if (length(ig) != 1 || !ig %in% c("protein", "peptide")) {
     return("`intensity_group` must be a single string: either 'protein' or 'peptide'")
@@ -57,13 +53,13 @@ TalusDataSet <- function(assay_data, col_data, row_data,
   stopifnot(nrow(assay_data) == nrow(row_data))
 
   # we expect a matrix of counts, which are non-negative integers
-  assay_ata <- as.matrix(d_ata)
+  assay_data <- as.matrix(assay_data)
 
-  if (is(col_ata, "data.frame")) {
+  if (is(col_data, "data.frame")) {
     col_data <- as(col_data, "DataFrame")
   }
 
-  if (is(row_ata, "data.frame")) {
+  if (is(row_data, "data.frame")) {
     row_data <- as(row_data, "DataFrame")
   }
 
@@ -82,16 +78,19 @@ TalusDataSet <- function(assay_data, col_data, row_data,
   }
 
   if (is.null(rownames(col_data)) & !is.null(colnames(assay_data))) {
-    rownames(col_data) <- colnames(abund_ata)
+    rownames(col_data) <- colnames(assay_data)
   }
 
   se <- SummarizedExperiment(
-    assays = SimpleList(abund = assay_data),
+    assays  = SimpleList(abundance = assay_data),
     colData = col_data,
     rowData = row_data
   )
-  new("TalusDataSet", se,
-    intensity_group = intensity,
-    metric = metric
-  )
+
+  metadata(se)$intensity_group <- intensity_group
+  metadata(se)$metric          <- metric
+  metadata(se)$log_transform   <- 'log2'
+
+  tds <- new("TalusDataSet", se)
+
 }

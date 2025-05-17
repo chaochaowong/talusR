@@ -41,34 +41,41 @@ read_talus <- function(file, meta_file,
   require(SummarizedExperiment)
   require(dplyr)
 
-  # read intensity signal
+  #
+  # 1. read intensity signal
+  #
   is_csv  <- tolower(tools::file_ext(file)) == "csv"
-  is_tsv  <- tolower(fools::file_ext(file)) == "tsv"
+  is_tsv  <- tolower(tools::file_ext(file)) == "tsv"
 
   if (!any(is_csv, is_tsv))
     stop('File must be in either csv or tsv format.')
 
-  if (is_csv) {
+  if (is_tsv) {
     tb <- read_delim(file, delim = "\t")
   }
 
-  if (is_tsv) {
+  if (is_csv) {
     tb <- read_csv(file)
   }
 
-  # must be CSV file
-  if (tolower(tools::file_ext(file)) == "csv")
+  #
+  # 2. read meta_file
+  #
+  if (tolower(tools::file_ext(meta_file)) == "csv")
     meta <- read_csv(meta_file)
   else
     stop('Meta file must be in csv format.')
 
-
-  # check which_run column exists in meta
+  #
+  # 3. check which_run column exists in meta
+  #
   if (!rlang::has_name(meta, which_run)) {
     stop(sprintf("which_run: column '%s' not found in %s", which_run, meta_file))
   }
 
-  # check which_proteinid column exists
+  #
+  # 4. check which_proteinid column exists
+  #
   if (!rlang::has_name(tb, which_proteinid)) {
     stop(sprintf("which_proteinid: column '%s' not found in %s", which_proteinid, file))
   }

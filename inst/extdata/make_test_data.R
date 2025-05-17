@@ -13,20 +13,8 @@ meta_file    <- here::here(data_dir,
                            'THP1_meta_data.csv')
 file = protein_file
 meta = meta_file
-which_proteinid = 'Protein.Ids'
-which_fraction = 'Frx'
-which_sequence = NA
-which_run = 'Run'
-remove_few_measurements = TRUE
-split_by_fraction = TRUE
-
-
-# for each fraction; select 500 protein
 tb <- read_delim(file, delim = "\t")
-
-# only keep 'DMSO, Doxo, and Etopo'
 meta <- read_csv(meta_file)
-
 #
 # slice proteins and samples
 #
@@ -46,7 +34,35 @@ tb_sub <- tb %>%
 #  - data/test_se.rda
 #
 
+readr::write_tsv(tb_sub, file='inst/extdata/test_data.tsv')
+readr::write_csv(meta_sub, file='inst/extdata/test_meta.csv')
 
+#
+# test read_talus()
+#
+file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_data.tsv'
+meta_file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_meta.csv'
+which_proteinid = 'Protein.Ids'
+which_fraction = 'Frx'
+which_sequence = NA
+which_run = 'Run'
+remove_few_measurements = TRUE
+split_by_fraction = TRUE
 
+meta <- read_csv(meta_file)
+tb <- read_delim(file, delim = "\t")
 
-
+source('R/read_talus.R')
+source('R/read-talus-utils.R')
+source('R/AllClasses.R')
+source('R/AllMethods.R')
+tds_list <- read_talus(file, meta_file,
+                       which_proteinid = "Protein.Ids",
+                       which_fraction = "Frx",
+                       which_sequence = NA,
+                       which_run = "Run",
+                       remove_few_measurements = TRUE,
+                       split_by_fraction = TRUE,
+                       intensity_group = "protein",
+                       metric = "DIA-NN")
+tds_list[[1]]
