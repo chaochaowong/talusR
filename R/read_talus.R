@@ -117,10 +117,10 @@ read_talus <- function(file, meta_file,
   # remove_few_measurements
   #
   if (remove_few_measurements) {
-    if (is.list(se)) {
-      se <- lapply(se, .remove_few_measurements, threshold = 0.85)
+    if (is(tds, 'TalusDataSetList')) {
+      tds <- lapply(tds, .remove_few_measurements, threshold = 0.85)
     } else {
-      se <- .remove_few_measurements(se, threshold = 0.85)
+      se <- .remove_few_measurements(tds, threshold = 0.85)
     }
   }
 
@@ -128,5 +128,5 @@ read_talus <- function(file, meta_file,
   # tidy up rownames
   #
 
-  return(se)
+  return(tds)
 }

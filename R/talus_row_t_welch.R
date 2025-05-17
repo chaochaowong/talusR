@@ -3,7 +3,7 @@
 #' A wrapping of
 #' SummarizedExperiment instances with three layers: nuc, cyto, and plasm.
 #'
-#' @param se a \code{SummarizedExperiment} instance with log-transform assays
+#' @param se a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays
 #' @param design a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
 #'
 #' @return orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}

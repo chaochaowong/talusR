@@ -98,7 +98,7 @@ TalusDataSet <- function(assay_data, col_data, row_data,
 }
 
 #' @rdname TalusDataSetList
-#' @import S4Vectors SimpleList
+#' @importFrom S4Vectors SimpleList
 #' @export
 setClass(
   "TalusDataSetList",
@@ -120,11 +120,11 @@ setValidity("TalusDataSetList", function(x) {
 #' @param lst A list of \code{TalusDataSet} objects.
 #' @return a \code{TalusDataSetList} object.
 #'
-#' @export
 #' @rdname TalusDataSetList
 #' @docType class
 #' @aliases TalusDataSetList TalusDataSetList-class
 #' @author Chao-Jen Wong
+#' @export
 TalusDataSetList <- function(lst) {
   # turn the dots into a FlatList, then coerce to your new class
   lst <- SimpleList(lst)

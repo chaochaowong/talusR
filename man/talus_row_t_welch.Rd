@@ -7,7 +7,7 @@
 talus_row_t_welch(se, design = ~0 + Tx)
 }
 \arguments{
-\item{se}{a \code{SummarizedExperiment} instance with log-transform assays}
+\item{se}{a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays}
 
 \item{design}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
 }

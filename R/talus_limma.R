@@ -1,11 +1,10 @@
 #' Wrapper function of limma for differential analysis
 #'
 #' A wrapper function using lmFit() to perform differential analysis
-#' @param se a \code{SummarizedExperiment} instance containing protein log-transform assays
+#' @param se a \code{TalusDataSet} or \code{TalusDataSet} instance containing protein log-transform assays
 #' @param desgin a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
 #'
 #' @import limma
-#' @import SummarizedExperiment
 #' @importFrom tibble rownames_to_column
 #' @author Chao-Jen Wong
 #' @export
@@ -14,7 +13,7 @@ talus_limma <- function(se, design = ~ 0 + Tx) {
   # check design formula: does Tx exist, is it a factor
   # display a level and control vs. contrasts
 
-  if (is.list(se)) {
+  if (is(se, 'TalusDataSetList')) {
     res <- lapply(se, .wrap_limma, design)
     names(res) <- names(se)
   } else {

@@ -7,7 +7,7 @@
 talus_limma(se, design = ~0 + Tx)
 }
 \arguments{
-\item{se}{a \code{SummarizedExperiment} instance containing protein log-transform assays}
+\item{se}{a \code{TalusDataSet} or \code{TalusDataSet} instance containing protein log-transform assays}
 
 \item{desgin}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
 }

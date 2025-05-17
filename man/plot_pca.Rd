@@ -4,10 +4,10 @@
 \alias{plot_pca}
 \title{Simple PCA plot for TalusDataSet}
 \usage{
-plot_pca(se, top_n = 500, color_by)
+plot_pca(tds, top_n = 500, color_by)
 }
 \arguments{
-\item{se}{a \code{SummarizedExperiment} (or a list) instances storing Talus data}
+\item{tds}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data}
 
 \item{top_n}{number of top proteins to use for principal components, selected by highest row variance}
 

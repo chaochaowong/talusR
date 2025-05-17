@@ -2,7 +2,7 @@
 #'
 #' This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
 #'
-#' @param se a \code{SummarizedExperiment} (or a list) instances storing Talus data
+#' @param tds a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data
 #' @param top_n number of top proteins to use for principal components, selected by highest row variance
 #' @param color_by a character string in colData to use for coloring
 #'
@@ -13,11 +13,11 @@
 #' @examples
 #' @export
 
-plot_pca <- function(se, top_n = 500, color_by) {
+plot_pca <- function(tds, top_n = 500, color_by) {
   require(ggplot)
 
-  if (is.list(se)) {
-    pcs <- map_dfr(se, function(object) {
+  if (is(tds, 'TalusDataSetList')) {
+    pcs <- map_dfr(tds, function(object) {
       .get_pcs(object, top_n)
     }, .id = "source")
 
@@ -31,7 +31,7 @@ plot_pca <- function(se, top_n = 500, color_by) {
       theme_bw() +
       theme(legend.position = c(0.7, 0.2))
   } else {
-    pcs <- .get_pcs(se, top_n)
+    pcs <- .get_pcs(tds, top_n)
     ggplot(pcs, aes_string(x = "PC1", y = "PC2", color = color_by)) +
       geom_point(size = 2, alpha = 0.8) +
       theme_bw()
