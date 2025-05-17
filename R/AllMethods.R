@@ -1,4 +1,3 @@
-# AllMethods.R()
 setMethod(
   "show", "TalusDataSet",
   function(object) {
@@ -17,3 +16,22 @@ setMethod(
     cat("log_transform:  ", lt, "\n")
   }
 )
+
+#' @rdname TalusDataSetList
+#' @importMethodsFrom S4Vectors show
+setMethod("show", "TalusDataSetList", function(object) {
+  ## 1) show the SimpleList summary:
+  callNextMethod()
+
+  ## 2) then show each TalusDataSet inside:
+  nms <- names(object)
+  for (i in seq_along(object)) {
+    header <- if (!is.null(nms) && nzchar(nms[i])) {
+      paste0("[[", i, "]] — name: ", nms[i], "\n")
+    } else {
+      paste0("[[", i, "]]\n")
+    }
+    cat("\n", header, sep = "")
+    show(object[[i]])
+  }
+})

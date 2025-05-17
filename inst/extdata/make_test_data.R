@@ -65,4 +65,4 @@ tds_list <- read_talus(file, meta_file,
                        split_by_fraction = TRUE,
                        intensity_group = "protein",
                        metric = "DIA-NN")
-tds_list[[1]]
+tds_list

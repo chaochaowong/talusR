@@ -14,22 +14,34 @@ read_talus(
   remove_few_measurements = TRUE,
   split_by_fraction = TRUE,
   log_transform = TRUE,
-  rowname_repair = TRUE
+  rowname_repair = TRUE,
+  intensity_group = "protein",
+  metric = "DIA-NN"
 )
 }
 \arguments{
-\item{file}{A path to a Diann summarized protein file or a connection.}
+\item{file}{a path to a mass-spectrum intensity signal matric file (TSV OR CSV) or a connection.}
 
-\item{remove_few_measurements}{If \code{TRUE}, remove measurements that are absent 85\% across all samples}
+\item{which_proteinid}{which column in the \code{file} input represents the protein id}
 
-\item{split_by_fraction}{If \code{TRUE}, split the protein abundance file according to value indicating in the values of the \code{which_fraction} column in the meta file}
+\item{which_sequence}{which column in the \code{file} input represents the sequence of the protein}
 
-\item{log_transform}{If \code{TRUE}, perform log2 transformation to the protein abundance}
+\item{which_run}{which column in the meta file represents the runs (sample) ID.}
 
-\item{meta_data}{A path to a meta (column) data file for samples.}
+\item{remove_few_measurements}{if \code{TRUE}, remove measurements that are absent 85\% across all samples}
+
+\item{split_by_fraction}{if \code{TRUE}, split the protein abundance file according to value indicating in the values of the \code{which_fraction} column in the meta file}
+
+\item{log_transform}{if \code{TRUE}, perform log2 transformation to the protein abundance}
+
+\item{intensity_group}{defual to "protein".}
+
+\item{metric}{default to "DIA-NN".}
+
+\item{meta_data}{a path to the metadata file (CSV) for the runs (samples).}
 }
 \value{
-A \code{SummarizedExperiment} objects with three layers of assay data
+a \code{SummarizedExperiment} objects with three layers of assay data
 }
 \description{
 Import Talus files that were processed by DIANN and convert to

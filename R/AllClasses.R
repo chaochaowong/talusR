@@ -22,7 +22,7 @@ setValidity("TalusDataSet", function(object) {
   TRUE
 })
 
-#' TalusDataSet object and constructors
+#' TalusDataSet object and constructor
 #'
 #' \code{TalusDataSet} is a subclass of \code{SummerizedExperiment} used
 #' to store the input mass-spectrum intensity signals, which reflects the
@@ -38,16 +38,18 @@ setValidity("TalusDataSet", function(object) {
 #' @param row_data for matrix input: a \code{DataFrame} or \code{data.frame} with at least a single column. Rows of \code{row_data} correspond to the rows of \code{assay_data}.
 #' @param intensity_group a character string specifying the levels of abundance, either protein or peptide.
 #' @param matric  a character string specifying the metric that generates the mass-spectrum signal values.
+#' @param log_transform a character string of the log transformation method.
 #'
 #' @return a \code{TalusDataSet} object.
 #' @export
-#'
+#' @author Chao-Jen Wong
 #' @rdname TalusDataSet
 #' @docType class
 #' @aliases TalusDataSet TalusDataSet-class
 TalusDataSet <- function(assay_data, col_data, row_data,
-                         intensity_group = "protein",
-                         metric = "DIA-NN") {
+                         intensity_group = 'protein',
+                         metric = 'DIA-NN',
+                         log_transform = 'log2') {
   # check that these agree in number
   stopifnot(ncol(assay_data) == nrow(col_data))
   stopifnot(nrow(assay_data) == nrow(row_data))
@@ -94,3 +96,36 @@ TalusDataSet <- function(assay_data, col_data, row_data,
   tds <- new("TalusDataSet", se)
 
 }
+
+#' @rdname TalusDataSetList
+#' @import S4Vectors SimpleList
+#' @export
+setClass(
+  "TalusDataSetList",
+  contains  = "SimpleList",
+  prototype = prototype(elementType = "TalusDataSet")
+)
+
+## 2) (Optional) A validity method to be extra‐sure:
+setValidity("TalusDataSetList", function(x) {
+  ok <- vapply(x, is, logical(1), "TalusDataSet")
+  if (!all(ok)) return("All elements must be TalusDataSet objects")
+  TRUE
+})
+
+#' TalusDataSetList object and constructors
+#'
+#' \code{TalusDataSetList}
+#' @return a \code{TalusDataSetList} object.
+#'
+#' @export
+#' @rdname TalusDataList
+#' @docType class
+#' @aliases TalusDataSetList TalusDataSetList-class
+#' @author Chao-Jen Wong
+TalusDataSetList <- function(...) {
+  # turn the dots into a FlatList, then coerce to your new class
+  lst <- SimpleList(...)
+  as(lst, "TalusDataSetList")
+}
+
