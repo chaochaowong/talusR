@@ -13,7 +13,7 @@ read_talus(
   which_run = "Run",
   remove_few_measurements = TRUE,
   split_by_fraction = TRUE,
-  log_transform = TRUE,
+  log_transform = "log2",
   rowname_repair = TRUE,
   intensity_group = "protein",
   metric = "DIA-NN"
@@ -28,20 +28,20 @@ read_talus(
 
 \item{which_run}{which column in the meta file represents the runs (sample) ID.}
 
-\item{remove_few_measurements}{if \code{TRUE}, remove measurements that are absent 85\% across all samples}
+\item{remove_few_measurements}{if \code{TRUE}, remove measurements that are absent 85\% across all samples.}
 
-\item{split_by_fraction}{if \code{TRUE}, split the protein abundance file according to value indicating in the values of the \code{which_fraction} column in the meta file}
+\item{split_by_fraction}{if \code{TRUE}, split the protein abundance file according to value indicating in the values of the \code{which_fraction} column in the meta file.}
 
 \item{log_transform}{if \code{TRUE}, perform log2 transformation to the protein abundance}
 
-\item{intensity_group}{defual to "protein".}
+\item{intensity_group}{a character string specifying the mass-spectrum intensity signal level. Default to "protein".}
 
-\item{metric}{default to "DIA-NN".}
+\item{metric}{a character specifying the metric data. Default to "DIA-NN".}
 
 \item{meta_data}{a path to the metadata file (CSV) for the runs (samples).}
 }
 \value{
-a \code{SummarizedExperiment} objects with three layers of assay data
+a \code{TalusDataSetList} object if \code{split_by_fraction} is TRUE, otherwise return a \code{TalusDataSet} object.
 }
 \description{
 Import Talus files that were processed by DIANN and convert to

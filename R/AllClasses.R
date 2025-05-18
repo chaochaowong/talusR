@@ -119,14 +119,13 @@ setValidity("TalusDataSetList", function(x) {
 #'
 #' @param lst A list of \code{TalusDataSet} objects.
 #' @return a \code{TalusDataSetList} object.
-#'
+#' @name TalusDataSetList
 #' @rdname TalusDataSetList
 #' @docType class
 #' @aliases TalusDataSetList TalusDataSetList-class
 #' @author Chao-Jen Wong
 #' @export
 TalusDataSetList <- function(lst) {
-  # turn the dots into a FlatList, then coerce to your new class
   lst <- SimpleList(lst)
   as(lst, "TalusDataSetList")
 }

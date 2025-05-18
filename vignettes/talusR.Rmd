@@ -88,7 +88,7 @@ talusR::plot_pca(tds, color_by='Frx')
 When `split_by_fraction = TRUE`, `read_talus()` returns a `TalusDataSetList` — a `SimpleList` of `TalusDataSet` objects, one per fraction, each holding its protein-level signals.
 
 ```{r split-by-fraction}
-tdsl <- talusR::read_talus(file = file,
+tdsl <- talusR::read_talus(file = protein_file,
                            meta_file = meta_file,
                            which_proteinid = "Protein.Ids",
                            which_fraction = "Frx",
