@@ -57,8 +57,11 @@ library(talusR)
 # Import Talus data
 Import test files by `read_talus()`.
 
-## `split_by_fraction`
-If `split_by_fraction = FALSE`, return a `TalusDataSet` object.
+## `split_by_fraction = FALSE`
+When `split_by_fraction = FALSE`, `read_talus()` returns a single `TalusDataSet`.  This mode is ideal when:
+
+- Your data have no fraction annotations       
+- You want to run PCA-based QC to verify that protein-level signals from each fraction cluster as expected        
 
 ```{r import-test-data}
 # get paths
@@ -77,7 +80,12 @@ tds  <- talusR::read_talus(file = protein_file,
 tds
 ```
 
-If `split_by_fraction = TRUE`, return a `TalusDataSetList` object, a `SimpleList` of `TalusDataSet` objects, each object represent the protein-level signal in each fraction.
+```{r pca-tds, fig.cap='PCA on TalusDataSet.'}
+talusR::plot_pca(tds, color_by='Frx')
+```
+
+## `split_by_fraction = TRUE`
+When `split_by_fraction = TRUE`, `read_talus()` returns a `TalusDataSetList` — a `SimpleList` of `TalusDataSet` objects, one per fraction, each holding its protein-level signals.
 
 ```{r split-by-fraction}
 tdsl <- talusR::read_talus(file = file,
@@ -92,6 +100,10 @@ tdsl <- talusR::read_talus(file = file,
                            intensity_group = "protein",
                            metric = "DIA-NN")
 tdsl
+```
+
+```{r pca-tds-list, eval=FALSE}
+talusR::plot_pca(tdsl, color_by='Frx')
 ```
 
 
