@@ -36,6 +36,27 @@ For now, this package only takes Talus data that are pre-processed by DIANN—i.
 
 This package also assumes that Talus process only one sample in a single run (one mass-spectrometry acquisition), and DIANN has executed the normalization process across all the runs. 
 
+Install `talusR`:
+```{r install-talusR, eval=FALSE}
+devtools::install_github('chaochaowong/talusR',
+                         ref          = "dev",
+                         dependencies = TRUE
+)
+
+# or to install the Bioconductor dependencies
+BiocManager::install(
+  "chaochaowong/talusR@dev",
+  dependencies = TRUE
+)
+```
+
+```{r load-library}
+library(talusR)
+```
+
+# Import Talus data
+
+
 
 
 

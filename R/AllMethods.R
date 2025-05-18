@@ -1,5 +1,5 @@
-#' @rdname TalusDataSetList
-#' @exportMethod
+#' @rdname TalusDataSet
+#' @exportMethod show
 setMethod(
   "show", "TalusDataSet",
   function(object) {
@@ -19,9 +19,9 @@ setMethod(
   }
 )
 
-#' @rdname TalusDataSetList
+#' @rdname TalusDataSet
 #' @importMethodsFrom S4Vectors show
-#' @exportMethod
+#' @exportMethod show
 setMethod("show", "TalusDataSetList", function(object) {
   ## 1) show the SimpleList summary:
   callNextMethod()

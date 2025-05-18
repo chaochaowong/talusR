@@ -6,15 +6,15 @@
 #' @param top_n number of top proteins to use for principal components, selected by highest row variance
 #' @param color_by a character string in colData to use for coloring
 #' @return
-#’   a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
+#'   a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
 #' @rdname plot_pca
 #' @export
 setGeneric("plot_pca",
            function(object, ...) standardGeneric("plot_pca"))
 
-#’ @rdname plot_pca
-#’ @aliases plot_pca,TalusDataSetList
-#’ @exportMethod plot_pca
+#' @rdname plot_pca
+#' @aliases plot_pca,TalusDataSetList
+#' @exportMethod plot_pca
 setMethod("plot_pca", "TalusDataSetList",
           function(object,
                    top_n = 500,
@@ -38,9 +38,9 @@ setMethod("plot_pca", "TalusDataSetList",
   }
 )
 
-#’ @rdname plot_pca
-#’ @aliases plot_pca,TalusDataSet
-#’ @exportMethod plot_pca
+#' @rdname plot_pca
+#' @aliases plot_pca,TalusDataSet
+#' @exportMethod plot_pca
 setMethod("plot_pca", "TalusDataSet",
           function(object,
                    top_n = 500,

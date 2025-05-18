@@ -17,8 +17,9 @@
 #' @return a \code{SummarizedExperiment} objects with three layers of assay data
 #'
 #' @importFrom rlang has_name
-#' @importFrom readr read_delim read_csv
-#' @importForm tools file_ext
+#' @importFrom readr read_delim
+#' @importFrom readr read_csv
+#' @importFrom tools file_ext
 #' @importFrom purrr map
 #' @import SummarizedExperiment
 #' @import dplyr

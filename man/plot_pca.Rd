@@ -2,16 +2,27 @@
 % Please edit documentation in R/plot_pca.R
 \name{plot_pca}
 \alias{plot_pca}
+\alias{plot_pca,TalusDataSetList-method}
+\alias{plot_pca,TalusDataSetList}
+\alias{plot_pca,TalusDataSet-method}
+\alias{plot_pca,TalusDataSet}
 \title{Simple PCA plot for TalusDataSet and TalusDataSetList}
 \usage{
 plot_pca(object, ...)
+
+\S4method{plot_pca}{TalusDataSetList}(object, top_n = 500, color_by)
+
+\S4method{plot_pca}{TalusDataSet}(object, top_n = 500, color_by)
 }
 \arguments{
-\item{tds}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data}
-
 \item{top_n}{number of top proteins to use for principal components, selected by highest row variance}
 
 \item{color_by}{a character string in colData to use for coloring}
+
+\item{tds}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data}
+}
+\value{
+a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
 }
 \description{
 This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
