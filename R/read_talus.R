@@ -9,12 +9,12 @@
 #' @param which_proteinid which column in the \code{file} input represents the protein id
 #' @param which_sequence which column in the \code{file} input represents the sequence of the protein
 #' @param which_run which column in the meta file represents the runs (sample) ID.
-#' @param remove_few_measurements if \code{TRUE}, remove measurements that are absent 85% across all samples
-#' @param split_by_fraction if \code{TRUE}, split the protein abundance file according to value indicating in the values of the \code{which_fraction} column in the meta file
+#' @param remove_few_measurements if \code{TRUE}, remove measurements that are absent 85% across all samples.
+#' @param split_by_fraction if \code{TRUE}, split the protein abundance file according to value indicating in the values of the \code{which_fraction} column in the meta file.
 #' @param log_transform if \code{TRUE}, perform log2 transformation to the protein abundance
-#' @param intensity_group  defual to "protein".
-#' @param metric default to "DIA-NN".
-#' @return a \code{SummarizedExperiment} objects with three layers of assay data
+#' @param intensity_group  a character string specifying the mass-spectrum intensity signal level. Default to "protein".
+#' @param metric a character specifying the metric data. Default to "DIA-NN".
+#' @return a \code{TalusDataSetList} object if \code{split_by_fraction} is TRUE, otherwise return a \code{TalusDataSet} object.
 #'
 #' @importFrom rlang has_name
 #' @importFrom readr read_delim
@@ -33,7 +33,7 @@ read_talus <- function(file, meta_file,
                        which_run = "Run",
                        remove_few_measurements = TRUE,
                        split_by_fraction = TRUE,
-                       log_transform = TRUE,
+                       log_transform = 'log2',
                        rowname_repair = TRUE,
                        intensity_group = "protein",
                        metric = "DIA-NN") {
@@ -41,6 +41,17 @@ read_talus <- function(file, meta_file,
   require(readr)
   require(SummarizedExperiment)
   require(dplyr)
+
+  #
+  # 0. file exist?
+  #
+  if (!file.exists(file)) {
+    stop(sprintf("File not found: '%s'", file), call. = FALSE)
+  }
+
+  if (!file.exists(meta_file)) {
+    stop(sprintf("Meta file not found: '%s'", meta_file), call. = FALSE)
+  }
 
   #
   # 1. read intensity signal
@@ -103,7 +114,7 @@ read_talus <- function(file, meta_file,
 
 
   #
-  # convert protein abundance to a list of SumarizedExperiment instance
+  # convert protein abundance to a TalusDataSet or TalusDataSetList instance
   #
   tds <- .make_tds(
     tb = tb,
@@ -111,7 +122,10 @@ read_talus <- function(file, meta_file,
     split_by_fraction = split_by_fraction,
     which_run = which_run,
     which_fraction = which_fraction,
-    which_proteinid = which_proteinid
+    which_proteinid = which_proteinid,
+    intensity_group = intensity_group,
+    metric = metric,
+    log_transform = log_transform
   )
 
   #

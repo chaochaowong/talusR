@@ -32,9 +32,9 @@ opts_chunk$set(
 
 # Getting started
 
-For now, this package only takes Talus data that are pre-processed by DIANN—i.e. the summarized protein-abundance file (`*.tsv`). The input metadata table (`*.csv`) must include a column (`which_run`) whose entries exactly match the sample (run) names in that abundance file.
+For now, this package only takes Talus data that are pre-processed by DIANN—i.e. that executed the normalization process and summarized the intensity signal in protein-level file (`*.tsv` or `*.csv`). The input metadata table (`*.csv`) must include a column (`which_run`) whose entries exactly match the sample (run) names in that abundance file.
 
-This package also assumes that Talus process only one sample in a single run (one mass-spectrometry acquisition), and DIANN has executed the normalization process across all the runs. 
+This package also assumes that Talus processes only one sample in a single run (one mass-spectrometer acquisition) and with DIA-NN executed the normalization process across all the runs. 
 
 Install `talusR`:
 ```{r install-talusR, eval=FALSE}
@@ -55,7 +55,22 @@ library(talusR)
 ```
 
 # Import Talus data
+Import test files by `read_talus()`.
+```{r import-test-data}
+# get paths
+protein_file <- system.file('extdata', 'test_data.tsv', 
+                            package = 'talusR')
+meta_file    <- system.file('extdata', 'test_meta.csv',
+                            package = 'talusR')
 
+# without split by fraction -> return TalusDataSet
+tds_list  <- talusR::read_talus(file = protein_file,
+                                meta_file = meta_file,
+                                which_proteinid = "Protein.Ids",
+                                which_run = "Run",
+                                split_by_fraction = FALSE)
+
+```
 
 
 
