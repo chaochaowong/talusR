@@ -1,12 +1,11 @@
-#' Per-protien t-Weltch testing
+#' Per-protein t-Welch testing
 #'
-#' A wrapping of
-#' SummarizedExperiment instances with three layers: nuc, cyto, and plasm.
+#' A wrapping function of matrxiTests::row_t_welch().
 #'
 #' @param se a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays
 #' @param design a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
 #'
-#' @return orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
+#' @return a data.frame with t-statistics append to rowData of \code{se}
 #' @author Chao-Jen Wong
 #'
 #' @importFrom matrixTests row_t_welch

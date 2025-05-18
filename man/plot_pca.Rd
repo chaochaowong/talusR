@@ -2,9 +2,9 @@
 % Please edit documentation in R/plot_pca.R
 \name{plot_pca}
 \alias{plot_pca}
-\title{Simple PCA plot for TalusDataSet}
+\title{Simple PCA plot for TalusDataSet and TalusDataSetList}
 \usage{
-plot_pca(tds, top_n = 500, color_by)
+plot_pca(object, ...)
 }
 \arguments{
 \item{tds}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data}
@@ -15,7 +15,4 @@ plot_pca(tds, top_n = 500, color_by)
 }
 \description{
 This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
-}
-\author{
-Chao-Jen Wong
 }

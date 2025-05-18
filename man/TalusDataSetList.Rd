@@ -4,10 +4,13 @@
 \name{TalusDataSetList-class}
 \alias{TalusDataSetList-class}
 \alias{TalusDataSetList}
+\alias{show,TalusDataSet-method}
 \alias{show,TalusDataSetList-method}
 \title{TalusDataSetList object and constructors}
 \usage{
 TalusDataSetList(lst)
+
+\S4method{show}{TalusDataSet}(object)
 
 \S4method{show}{TalusDataSetList}(object)
 }

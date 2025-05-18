@@ -1,42 +1,63 @@
-#' Simple PCA plot for TalusDataSet
+#' Simple PCA plot for TalusDataSet and TalusDataSetList
 #'
 #' This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
 #'
 #' @param tds a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data
 #' @param top_n number of top proteins to use for principal components, selected by highest row variance
 #' @param color_by a character string in colData to use for coloring
-#'
-#' @import ggplot2
-#' @importFrom purrr map_dfr
-#'
-#' @author Chao-Jen Wong
-#' @examples
+#' @return
+#’   a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
+#' @rdname plot_pca
 #' @export
+setGeneric("plot_pca",
+           function(object, ...) standardGeneric("plot_pca"))
 
-plot_pca <- function(tds, top_n = 500, color_by) {
-  require(ggplot)
-
-  if (is(tds, 'TalusDataSetList')) {
-    pcs <- map_dfr(tds, function(object) {
-      .get_pcs(object, top_n)
+#’ @rdname plot_pca
+#’ @aliases plot_pca,TalusDataSetList
+#’ @exportMethod plot_pca
+setMethod("plot_pca", "TalusDataSetList",
+          function(object,
+                   top_n = 500,
+                   color_by) {
+    # get pcs
+    pcs <- map_dfr(object, function(x) {
+      .get_pcs(x, top_n)
     }, .id = "source")
 
+    # make sure color_by column exists
     if (!all(color_by %in% names(pcs))) {
-      stop("the argument 'color_by' should specify columns of colData(se)")
+      stop("the argument 'color_by' should specify columns of colData(object)")
     }
 
+    # plot pca
     ggplot(pcs, aes_string(x = "PC1", y = "PC2", color = color_by)) +
       geom_point(size = 2, alpha = 0.8) +
       facet_wrap(~source, nrow = 2, scales = "free") +
       theme_bw() +
       theme(legend.position = c(0.7, 0.2))
-  } else {
-    pcs <- .get_pcs(tds, top_n)
+  }
+)
+
+#’ @rdname plot_pca
+#’ @aliases plot_pca,TalusDataSet
+#’ @exportMethod plot_pca
+setMethod("plot_pca", "TalusDataSet",
+          function(object,
+                   top_n = 500,
+                   color_by) {
+
+    pcs <- .get_pcs(object, top_n)
+
+    if (!all(color_by %in% names(pcs))) {
+      stop("the argument 'color_by' should specify columns of colData(object)")
+    }
+
     ggplot(pcs, aes_string(x = "PC1", y = "PC2", color = color_by)) +
       geom_point(size = 2, alpha = 0.8) +
       theme_bw()
   }
-}
+)
+
 
 .get_pcs <- function(object, top_n) {
   # wrap plotPCA from DESeq2

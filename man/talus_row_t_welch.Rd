@@ -2,7 +2,7 @@
 % Please edit documentation in R/talus_row_t_welch.R
 \name{talus_row_t_welch}
 \alias{talus_row_t_welch}
-\title{Per-protien t-Weltch testing}
+\title{Per-protein t-Welch testing}
 \usage{
 talus_row_t_welch(se, design = ~0 + Tx)
 }
@@ -12,11 +12,10 @@ talus_row_t_welch(se, design = ~0 + Tx)
 \item{design}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
 }
 \value{
-orginal \code{SummarizedExperiment} objects with t-statistics append to rowData of \code{se}
+a data.frame with t-statistics append to rowData of \code{se}
 }
 \description{
-A wrapping of
-SummarizedExperiment instances with three layers: nuc, cyto, and plasm.
+A wrapping function of matrxiTests::row_t_welch().
 }
 \author{
 Chao-Jen Wong
