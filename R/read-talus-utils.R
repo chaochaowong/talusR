@@ -1,4 +1,4 @@
-# .make_se() and .construct_se()
+# .make_tds() and .construct_tds()
 .make_tds <- function(tb,
                       meta,
                       split_by_fraction,

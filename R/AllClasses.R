@@ -102,8 +102,6 @@ TalusDataSet <- function(assay_data, col_data, row_data,
 #' A \code{TalusDataSetList} is an S4 \code{\linkS4class{SimpleList}} containing
 #' one or more \code{\linkS4class{TalusDataSet}} objects.
 #'
-#' @param lst A \code{list} of \code{TalusDataSet} objects.
-#' @return a \code{TalusDataSetList} object.
 #' @name TalusDataSetList-class
 #' @aliases TalusDataSetList-class TalusDataSetList
 #' @docType class
@@ -128,10 +126,11 @@ setValidity("TalusDataSetList", function(object) {
 ## 3. A contstructor
 
 #' @rdname TalusDataSetList-class
+#' @param lst list of TalusDataSet objects
+#' @return a validated TalusDataSetList
 #' @export
 TalusDataSetList <- function(lst) {
   # Wrap a base list in a SimpleList, then coerce
-  st <- SimpleList(lst)
-  as(st, "TalusDataSetList")
+  new("TalusDataSetList", listData = lst)
 }
 
