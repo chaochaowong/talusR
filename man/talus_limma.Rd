@@ -2,14 +2,25 @@
 % Please edit documentation in R/talus_limma.R
 \name{talus_limma}
 \alias{talus_limma}
+\alias{talus_limma,TalusDataSetList-method}
+\alias{talus_limma,TalusDataSetList}
+\alias{talus_limma,TalusDataSet-method}
+\alias{talus_limma,TalusDataSet}
 \title{Wrapper function of limma for differential analysis}
 \usage{
-talus_limma(se, design = ~0 + Tx)
+talus_limma(object, design = ~0 + Tx)
+
+\S4method{talus_limma}{TalusDataSetList}(object, design = ~0 + Tx)
+
+\S4method{talus_limma}{TalusDataSet}(object, design = ~0 + Tx)
 }
 \arguments{
-\item{se}{a \code{TalusDataSet} or \code{TalusDataSet} instance containing protein log-transform assays}
+\item{object}{a \code{TalusDataSet} or \code{TalusDataSetList} instance containing protein log-transform assays}
 
 \item{desgin}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
+}
+\value{
+a \code{TalusResult} or \code{TalusResultList} instance.
 }
 \description{
 A wrapper function using lmFit() to perform differential analysis

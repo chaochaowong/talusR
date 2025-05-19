@@ -1,27 +1,48 @@
 #' Wrapper function of limma for differential analysis
 #'
 #' A wrapper function using lmFit() to perform differential analysis
-#' @param se a \code{TalusDataSet} or \code{TalusDataSet} instance containing protein log-transform assays
+#' @param object a \code{TalusDataSet} or \code{TalusDataSetList} instance containing protein log-transform assays
 #' @param desgin a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
+#' @return a \code{TalusResult} or \code{TalusResultList} instance.
 #'
 #' @import limma
 #' @importFrom tibble rownames_to_column
 #' @author Chao-Jen Wong
+#' @name talus_limma
+#' @rdname talus_limma
 #' @export
-talus_limma <- function(se, design = ~ 0 + Tx) {
-  require(limma)
+setGeneric("talus_limma",
+           function(object, design = ~ 0 + Tx)
+             standardGeneric("talus_limma")
+)
+
+#' @rdname talus_limma
+#' @aliases talus_limma,TalusDataSetList
+#' @exportMethod talus_limma
+setMethod("talus_limma", signature(object = "TalusDataSetList"),
+  function(object, design = ~ 0 + Tx) {
   # check design formula: does Tx exist, is it a factor
   # display a level and control vs. contrasts
 
-  if (is(se, 'TalusDataSetList')) {
-    res <- lapply(se, .wrap_limma, design)
-    names(res) <- names(se)
-  } else {
-    res <- .wrap_limma(se, design)
-  }
+    res <- lapply(object, .wrap_limma, design)
+    names(res) <- names(object)
 
-  return(res)
-}
+    return(res)
+  }
+)
+
+#' @rdname talus_limma
+#' @aliases talus_limma,TalusDataSet
+#' @exportMethod talus_limma
+setMethod("talus_limma", signature(object = "TalusDataSet"),
+  function(object, design = ~ 0 + Tx) {
+  # check design formula: does Tx exist? is it a factor?
+  # display a level and control vs. contrasts
+    res <- .wrap_limma(object, design)
+    return(res)
+  }
+)
+
 
 .wrap_limma <- function(object, design) {
   # assemble row_data to be join to the output of topTable()
