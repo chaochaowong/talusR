@@ -9,10 +9,10 @@
 TalusDataSetList(lst)
 }
 \arguments{
-\item{lst}{A \code{list} of \code{TalusDataSet} objects.}
+\item{lst}{list of TalusDataSet objects}
 }
 \value{
-a \code{TalusDataSetList} object.
+a validated TalusDataSetList
 }
 \description{
 A \code{TalusDataSetList} is an S4 \code{\linkS4class{SimpleList}} containing
