@@ -34,6 +34,10 @@ setMethod("plot_pca", "TalusDataSetList",
       geom_point(size = 2, alpha = 0.8) +
       facet_wrap(~source, nrow = 2, scales = "free") +
       theme_bw() +
+      theme(
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank()
+      ) +
       theme(legend.position = c(0.7, 0.2))
   }
 )
@@ -54,7 +58,11 @@ setMethod("plot_pca", "TalusDataSet",
 
     ggplot(pcs, aes_string(x = "PC1", y = "PC2", color = color_by)) +
       geom_point(size = 2, alpha = 0.8) +
-      theme_bw()
+      theme_bw() +
+      theme(
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank()
+      )
   }
 )
 
