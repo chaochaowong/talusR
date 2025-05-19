@@ -13,6 +13,7 @@
     pull(which_run)
 
   if (split_by_fraction) {
+    cat('split-fraction')
     tds <- meta %>%
       split(.[[which_fraction]]) %>%       # named list by Fraction values
       map(function(sub_meta) {
@@ -24,9 +25,8 @@
                        intensity_group,
                        metric,
                        log_transform)
-      })
-    # turn list to `TalusDataSetList`
-    tds <- TalusDataSetList(tds)
+      }) %>% TalusDataSetList()
+
     # TODO? clean up `rownames`: one single protein.ID ??
   }
 

@@ -99,11 +99,14 @@ tdsl <- talusR::read_talus(file = protein_file,
                            log_transform = 'log2',
                            intensity_group = "protein",
                            metric = "DIA-NN")
-# not sure why tdsl is a list!!!
+# not sure why tdsl is a list!!! need to debug
 tdsl <- TalusDataSetList(tdsl)
 tdsl
 ```
 
+```{r pca-for-TalusDataSetList}
+plot_pca(tdsl, color_by='Tx')
+```
 ```{r pca-tds-list, eval=FALSE}
 talusR::plot_pca(tdsl, color_by='Frx')
 ```

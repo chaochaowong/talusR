@@ -1,5 +1,5 @@
 #' @rdname TalusDataSet
-#' @export
+#' @exportClass TalusDataSet
 #'
 # 1) Define class
 setClass(
@@ -97,33 +97,37 @@ TalusDataSet <- function(assay_data, col_data, row_data,
 
 }
 
-#' @rdname TalusDataSetList
+#' TalusDataSetList-class and constructor
+#'
+#' A \code{TalusDataSetList} is an S4 \code{\linkS4class{SimpleList}} containing
+#' one or more \code{\linkS4class{TalusDataSet}} objects.
+#'
+#' @param lst A \code{list} of \code{TalusDataSet} objects.
+#' @return a \code{TalusDataSetList} object.
+#' @name TalusDataSetList-class
+#' @aliases TalusDataSetList-class TalusDataSetList
+#' @docType class
 #' @importFrom S4Vectors SimpleList
-#' @export
+#' @exportClass TalusDataSetList
+#' @author Chao-Jen Wong
 setClass(
   "TalusDataSetList",
   contains  = "SimpleList",
   prototype = prototype(elementType = "TalusDataSet")
 )
 
-## 2) (Optional) A validity method to be extra‐sure:
+## 2. A validity method to be extra‐sure:
+
 setValidity("TalusDataSetList", function(object) {
   ok <- vapply(object, is, logical(1), "TalusDataSet")
-  if (!all(object)) return("All elements must be TalusDataSet objects")
+  if (!all(ok))
+    return("All elements must be TalusDataSet objects")
   TRUE
 })
 
-#' TalusDataSetList object and constructors
-#'
-#' \code{TalusDataSetList} is a \code{SimpleList} object of \code{TalusDataSet}. The constructor convert a list of \code{TalusDataSet} objects to a \code{SimpleList} object.
-#'
-#' @param lst A \code{list} of \code{TalusDataSet} objects.
-#' @return a \code{TalusDataSetList} object.
-#' @name TalusDataSetList
-#' @rdname TalusDataSetList
-#' @docType class
-#' @aliases TalusDataSetList TalusDataSetList-class
-#' @author Chao-Jen Wong
+## 3. A contstructor
+
+#' @rdname TalusDataSetList-class
 #' @export
 TalusDataSetList <- function(lst) {
   # Wrap a base list in a SimpleList, then coerce
