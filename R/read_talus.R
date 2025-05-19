@@ -28,7 +28,7 @@
 #' @export
 read_talus <- function(file, meta_file,
                        which_proteinid = "Protein.Ids",
-                       which_fraction = "Frx",
+                       which_fraction = NULL,
                        which_sequence = NA,
                        which_run = "Run",
                        remove_few_measurements = TRUE,
@@ -94,8 +94,12 @@ read_talus <- function(file, meta_file,
 
   # if split_by_fraction, check which_fraction column exists
   if (split_by_fraction) {
+    if (is.null(which_fraction)) {
+      stop('which_fraction cannot be NULL.')
+    }
+
     if (!rlang::has_name(meta, which_fraction)) {
-      top(sprintf("which_fraction: column '%s' not found in %s", which_fraction, meta_file))
+      stop(sprintf("which_fraction: column '%s' not found in %s", which_fraction, meta_file))
     }
   }
 
