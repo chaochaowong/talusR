@@ -40,13 +40,15 @@ Install `talusR`:
 ```{r install-talusR, eval=FALSE}
 devtools::install_github('chaochaowong/talusR',
                          ref          = "dev",
-                         dependencies = TRUE
+                         dependencies = TRUE,
+                         build_vignettes = TRUE
 )
 
 # or to install the Bioconductor dependencies
 BiocManager::install(
   "chaochaowong/talusR@dev",
   dependencies = TRUE
+  build_vignettes = TRUE
 )
 ```
 
@@ -81,6 +83,8 @@ tds  <- talusR::read_talus(file = protein_file,
 tds
 ```
 
+### QC: PCA
+Use PCA to verify that protein-level signals from each fraction cluster as expected.
 ```{r pca-tds, fig.cap='PCA on TalusDataSet.'}
 talusR::plot_pca(tds, color_by='Frx')
 ```
@@ -104,32 +108,59 @@ tdsl <- read_talus(file = protein_file,
 tdsl
 ```
 
-```{r pca-for-TalusDataSetList}
+### QC: PCA
+```{r pca-for-TalusDataSetList, fig.cap='PCA performed separately on each fraction in the TalusDataSetList.'}
 plot_pca(tdsl, color_by='Tx')
 ```
 
 # Differential analysis
 
 ## `limma`
+Use `talus_limma()`, a wrapping function of `limma`, to perform differential analysis. 
 
 ```{r limma}
-res <- talus_limma(tdsl, design = ~ 0 + Tx)
+res_limma <- talus_limma(tdsl, design = ~ 0 + Tx)
+```
+
+Summarize the limma results and filter to retain the significant proteins. 
+```{r summarize-limma}
 limma_filt <- summary_talus(res[['chrom']], 
                             alpha = 0.05, 
                             lfc_threshold = 0.5)
+limma_file
+```
+
+Visualize the statistiics by `plot_volcano()`:
+```{r volcano-limma}
+plot_volcano(res_limma[['chrom']], 
+             alpha = 0.05,
+             lfc_threshold = 0.5, 
+             use_adjP = TRUE, 
+             label_top_n=10)
 ```
 
 ## Row-t test
+
+Perform row-t tests on by `talus_row_t_welch()`. It returns a list of `data.frame` if the input is is a `TalusDataSetList` object.  
 ```{r row-t-welch, eval=FALSE}
 res_t <- talus_row_t_welch(tdsl, design = ~ 0 + Tx)
+names(res_t)
+```
+
+Display summary of the t tests and filter the results by `summary_talus()`. The input must be a `data.frame`:
+```{r show-row-t-summary}
 limma_filt <- summary_talus(res_t[['chrom']], 
                             alpha = 0.05, 
                             lfc_threshold = 0.5)
 ```
-
-# Plots
-
-## Volcano plots
+Visualize the statistics by `plot_volcano()`. 
+```{r viz-t-welch-by-volcano}
+plot_volcano(res_t[['chrom']], 
+             alpha = 0.05,
+             lfc_threshold = 0.5, 
+             use_adjP = TRUE, 
+             label_top_n=10)
+```
 
 
 

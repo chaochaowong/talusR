@@ -1,6 +1,6 @@
 Package: talusR
 Title: Tools facilitating Talus data analysis
-Version: 0.99.32
+Version: 1.0.0
 Authors@R: 
     person("Choa-Jen", "Wong", , "chao-jen.wong@seattlechildrens.org", role = c("aut", "cre"))
 Description: Tools facilitating Talus data import and analysis.

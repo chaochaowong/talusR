@@ -15,12 +15,12 @@ talus_row_t_welch(object, design = ~0 + Tx)
 \S4method{talus_row_t_welch}{TalusDataSet}(object, design = ~0 + Tx)
 }
 \arguments{
-\item{design}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
+\item{object}{a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays}
 
-\item{se}{a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays}
+\item{design}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
 }
 \value{
-a data.frame with t-statistics append to rowData of \code{se}
+a data.frame with t-statistics append to rowData of \code{object}
 }
 \description{
 A wrapping function of matrxiTests::row_t_welch().

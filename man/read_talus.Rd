@@ -8,7 +8,7 @@ read_talus(
   file,
   meta_file,
   which_proteinid = "Protein.Ids",
-  which_fraction = "Frx",
+  which_fraction = NULL,
   which_sequence = NA,
   which_run = "Run",
   remove_few_measurements = TRUE,
