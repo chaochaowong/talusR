@@ -124,10 +124,10 @@ res_limma <- talus_limma(tdsl, design = ~ 0 + Tx)
 
 Summarize the limma results and filter to retain the significant proteins. 
 ```{r summarize-limma}
-limma_filt <- summary_talus(res[['chrom']], 
+limma_filt <- summary_talus(res_limma[['chrom']], 
                             alpha = 0.05, 
                             lfc_threshold = 0.5)
-limma_file
+limma_filt
 ```
 
 Visualize the statistiics by `plot_volcano()`:
@@ -149,10 +149,11 @@ names(res_t)
 
 Display summary of the t tests and filter the results by `summary_talus()`. The input must be a `data.frame`:
 ```{r show-row-t-summary}
-limma_filt <- summary_talus(res_t[['chrom']], 
+ttest_filt <- summary_talus(res_t[['chrom']], 
                             alpha = 0.05, 
                             lfc_threshold = 0.5)
 ```
+
 Visualize the statistics by `plot_volcano()`. 
 ```{r viz-t-welch-by-volcano}
 plot_volcano(res_t[['chrom']], 
