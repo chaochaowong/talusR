@@ -99,6 +99,8 @@ tdsl <- talusR::read_talus(file = protein_file,
                            log_transform = 'log2',
                            intensity_group = "protein",
                            metric = "DIA-NN")
+# not sure why tdsl is a list!!!
+tdsl <- TalusDataSetList(tdsl)
 tdsl
 ```
 

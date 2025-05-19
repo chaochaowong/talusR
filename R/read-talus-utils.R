@@ -25,12 +25,10 @@
                        metric,
                        log_transform)
       })
-
+    # turn list to `TalusDataSetList`
     tds <- TalusDataSetList(tds)
-    # TODO? clean up rownames: one single protein.ID ??
-
+    # TODO? clean up `rownames`: one single protein.ID ??
   }
-
 
   if (!split_by_fraction) {
     tds <- .construct_tds(meta,

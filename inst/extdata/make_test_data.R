@@ -1,3 +1,4 @@
+source('R/AllClasses.R')
 # tmp file just for testing
 work_dir <- '///Volumes/sarthy_j/Sarthy/Sarthy_Lab/Proteomics'
 thp1_dir <- here::here(work_dir,
@@ -15,6 +16,17 @@ file = protein_file
 meta = meta_file
 tb <- read_delim(file, delim = "\t")
 meta <- read_csv(meta_file)
+which_proteinid = 'Protein.Ids'
+which_fraction = 'Frx'
+which_sequence = NA
+which_run = 'Run'
+remove_few_measurements = TRUE
+split_by_fraction = TRUE
+intensity_group = ''
+metric = 'DIA-NN'
+log_transform = 'log2'
+
+### sub to make test dataset
 #
 # slice proteins and samples
 #
@@ -48,6 +60,9 @@ which_sequence = NA
 which_run = 'Run'
 remove_few_measurements = TRUE
 split_by_fraction = TRUE
+intensity_group = ''
+metric = 'DIA-NN'
+log_transform = 'log2'
 
 meta <- read_csv(meta_file)
 tb <- read_delim(file, delim = "\t")

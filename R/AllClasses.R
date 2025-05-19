@@ -107,9 +107,9 @@ setClass(
 )
 
 ## 2) (Optional) A validity method to be extra‐sure:
-setValidity("TalusDataSetList", function(x) {
-  ok <- vapply(x, is, logical(1), "TalusDataSet")
-  if (!all(ok)) return("All elements must be TalusDataSet objects")
+setValidity("TalusDataSetList", function(object) {
+  ok <- vapply(object, is, logical(1), "TalusDataSet")
+  if (!all(object)) return("All elements must be TalusDataSet objects")
   TRUE
 })
 
