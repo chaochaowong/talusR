@@ -142,7 +142,7 @@ plot_volcano(res_limma[['chrom']],
 ## Row-t test
 
 Perform row-t tests on by `talus_row_t_welch()`. It returns a list of `data.frame` if the input is is a `TalusDataSetList` object.  
-```{r row-t-welch, eval=FALSE}
+```{r row-t-welch}
 res_t <- talus_row_t_welch(tdsl, design = ~ 0 + Tx)
 names(res_t)
 ```
