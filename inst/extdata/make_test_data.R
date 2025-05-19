@@ -12,19 +12,9 @@ protein_file <- here::here(data_dir,
                            'THP1_proteinIDs_matrix.tsv')
 meta_file    <- here::here(data_dir,
                            'THP1_meta_data.csv')
-file = protein_file
-meta = meta_file
-tb <- read_delim(file, delim = "\t")
+
+tb <- read_delim(protein_file, delim = "\t")
 meta <- read_csv(meta_file)
-which_proteinid = 'Protein.Ids'
-which_fraction = 'Frx'
-which_sequence = NA
-which_run = 'Run'
-remove_few_measurements = TRUE
-split_by_fraction = TRUE
-intensity_group = ''
-metric = 'DIA-NN'
-log_transform = 'log2'
 
 ### sub to make test dataset
 #
@@ -56,7 +46,22 @@ file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_tdsl.tsv'
 meta_file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_meta.csv'
 
 library(talusR)
-test_tdsl <- read_talus(file, meta_file,
+
+test_tds <- read_talus(file=protein_file,
+                        meta_file = meta_file,
+                        which_proteinid = "Protein.Ids",
+                        which_fraction = "Frx",
+                        which_sequence = NA,
+                        which_run = "Run",
+                        remove_few_measurements = TRUE,
+                        split_by_fraction = FALSE,
+                        intensity_group = "protein",
+                        metric = "DIA-NN",
+                        log_transform = 'log2')
+save(test_tds, file='data/test_tds.rda')
+
+test_tdsl <- read_talus(file=protein_file,
+                        meta_file = meta_file,
                         which_proteinid = "Protein.Ids",
                         which_fraction = "Frx",
                         which_sequence = NA,
@@ -66,4 +71,6 @@ test_tdsl <- read_talus(file, meta_file,
                         intensity_group = "protein",
                         metric = "DIA-NN",
                         log_transform = 'log2')
-tds_list
+save(test_tdsl, file='data/test_tdsl.rda')
+
+
