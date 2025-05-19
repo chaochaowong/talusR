@@ -2,14 +2,22 @@
 % Please edit documentation in R/talus_row_t_welch.R
 \name{talus_row_t_welch}
 \alias{talus_row_t_welch}
+\alias{talus_row_t_welch,TalusDataSetList-method}
+\alias{talus_row_t_welch,TalusDataSetList}
+\alias{talus_row_t_welch,TalusDataSet-method}
+\alias{talus_row_t_welch,TalusDataSet}
 \title{Per-protein t-Welch testing}
 \usage{
-talus_row_t_welch(se, design = ~0 + Tx)
+talus_row_t_welch(object, design = ~0 + Tx)
+
+\S4method{talus_row_t_welch}{TalusDataSetList}(object, design = ~0 + Tx)
+
+\S4method{talus_row_t_welch}{TalusDataSet}(object, design = ~0 + Tx)
 }
 \arguments{
-\item{se}{a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays}
-
 \item{design}{a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}}
+
+\item{se}{a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays}
 }
 \value{
 a data.frame with t-statistics append to rowData of \code{se}

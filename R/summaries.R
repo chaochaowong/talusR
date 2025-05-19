@@ -6,6 +6,7 @@
 #' @param lfc_threshold a non-negative values of significance log fold change threshold for independent filtering. Default to NULL.
 #'
 #' @importFrom purrr map
+#' @importFrom purrr map2
 #' @importFrom dplyr filter
 #'
 #' @export
@@ -24,7 +25,7 @@ summary_talus <- function(object,
   # get the filtered data.frame
   # display message
   obj_filt <- map2(
-    object, names(object), display_summary_talus,
+    object, names(object), .display_summary_talus,
     alpha, lfc_threshold
   )
 
@@ -37,7 +38,7 @@ summary_talus <- function(object,
 
 
 
-display_summary_talus <- function(res,
+.display_summary_talus <- function(res,
                                   contrast_name,
                                   alpha,
                                   lfc_threshold) {
@@ -61,6 +62,7 @@ display_summary_talus <- function(res,
   n_zero <- sum(filt$logFC == 0, na.rm = TRUE)
 
   # print a summary
+  cap("\n")
   cat(contrast_name, ":\n\n")
   cat(sprintf(
     "Threshold: alpha < %s; |lfc_threshod| > %s\n",

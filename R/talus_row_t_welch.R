@@ -13,20 +13,39 @@
 #' @import dplyr
 #'
 #' @export
-talus_row_t_welch <- function(se, design = ~ 0 + Tx) {
-  require(matrixTests)
+#' @name talus_row_t_welch
+#' @rdname talus_row_t_welch
+setGeneric("talus_row_t_welch",
+           function(object, design = ~ 0 + Tx)
+             standardGeneric("talus_row_t_welch")
+)
+
+#' @rdname talus_row_t_welch
+#' @aliases talus_row_t_welch,TalusDataSetList
+#' @exportMethod talus_row_t_welch
+setMethod("talus_row_t_welch", signature(object = "TalusDataSetList"),
+  function(object, design = ~ 0 + Tx) {
   # check design formula: does Tx exist, is it a factor
   # display a level and control vs. contrasts
 
-  if (is.list(se)) {
-    res <- lapply(se, .wrap_row_t_welch, design)
+    res <- lapply(obj, .wrap_row_t_welch, design)
     names(res) <- names(se)
-  } else {
-    res <- .wrap_row_t_welch(se, design)
-  }
 
-  return(res)
-}
+    return(res)
+  }
+)
+
+#' @rdname talus_row_t_welch
+#' @aliases talus_row_t_welch,TalusDataSet
+#' @exportMethod talus_row_t_welch
+setMethod("talus_row_t_welch", signature(object = "TalusDataSet"),
+  function(object, design = ~ 0 + Tx) {
+    # check design formula: does Tx exist? is it a factor?
+    # display a level and control vs. contrasts
+    .wrap_row_t_welch(object, design)
+  }
+)
+
 
 .wrap_row_t_welch <- function(object,
                               design) {

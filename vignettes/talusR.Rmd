@@ -104,7 +104,6 @@ tdsl
 ```
 
 ```{r pca-for-TalusDataSetList}
-if (is.list(tdsl)) tdsl <- TalusDataSetList(tdsl)
 plot_pca(tdsl, color_by='Tx')
 ```
 
@@ -112,8 +111,20 @@ plot_pca(tdsl, color_by='Tx')
 
 ## `limma`
 
-## Row-t test
+```{r limma}
+res <- talus_limma(tdsl, design = ~ 0 + Tx)
+limma_filt <- summary_talus(res[['chrom']], 
+                            alpha = 0.05, 
+                            lfc_threshold = 0.5)
+```
 
+## Row-t test
+```{r row-t-welch}
+res_t <- talus_row_t_welch(tdsl, design = ~ 0 + Tx)
+limma_filt <- summary_talus(res_t[['chrom']], 
+                            alpha = 0.05, 
+                            lfc_threshold = 0.5)
+```
 # Plots
 
 ## Volcano plots
