@@ -63,13 +63,14 @@ When `split_by_fraction = FALSE`, `read_talus()` returns a single `TalusDataSet`
 - Your data have no fraction annotations       
 - You want to run PCA-based QC to verify that protein-level signals from each fraction cluster as expected        
 
-```{r import-test-data}
+```{r assemble-files}
 # get paths
 protein_file <- system.file('extdata', 'test_data.tsv', 
                             package = 'talusR')
 meta_file    <- system.file('extdata', 'test_meta.csv',
                             package = 'talusR')
-
+```
+```{r import-test-data}
 # without split by fraction -> return TalusDataSet
 tds  <- talusR::read_talus(file = protein_file,
                            meta_file = meta_file,
@@ -113,13 +114,13 @@ plot_pca(tdsl, color_by='Tx')
 
 ```{r limma}
 res <- talus_limma(tdsl, design = ~ 0 + Tx)
-limma_filt <- summary_talus(res[['chrom']], 
-                            alpha = 0.05, 
-                            lfc_threshold = 0.5)
+#limma_filt <- summary_talus(res[['chrom']], 
+#                            alpha = 0.05, 
+#                            lfc_threshold = 0.5)
 ```
 
 ## Row-t test
-```{r row-t-welch}
+```{r row-t-welch, eval=FALSE}
 res_t <- talus_row_t_welch(tdsl, design = ~ 0 + Tx)
 limma_filt <- summary_talus(res_t[['chrom']], 
                             alpha = 0.05, 

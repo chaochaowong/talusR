@@ -29,9 +29,6 @@ summary_talus <- function(object,
     alpha, lfc_threshold
   )
 
-  # }
-
-
   return(obj_filt)
 }
 
@@ -39,9 +36,9 @@ summary_talus <- function(object,
 
 
 .display_summary_talus <- function(res,
-                                  contrast_name,
-                                  alpha,
-                                  lfc_threshold) {
+                                   contrast_name,
+                                   alpha,
+                                   lfc_threshold) {
   # must check if the input is a data.frame containing either adj.P.Val or logFC columns
   # if (!is.data.frame(res))
   #  stop('')
@@ -62,7 +59,7 @@ summary_talus <- function(object,
   n_zero <- sum(filt$logFC == 0, na.rm = TRUE)
 
   # print a summary
-  cap("\n")
+  cat("\n")
   cat(contrast_name, ":\n\n")
   cat(sprintf(
     "Threshold: alpha < %s; |lfc_threshod| > %s\n",
