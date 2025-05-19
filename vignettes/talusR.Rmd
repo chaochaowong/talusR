@@ -126,6 +126,7 @@ limma_filt <- summary_talus(res_t[['chrom']],
                             alpha = 0.05, 
                             lfc_threshold = 0.5)
 ```
+
 # Plots
 
 ## Volcano plots

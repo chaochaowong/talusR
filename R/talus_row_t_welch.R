@@ -2,10 +2,10 @@
 #'
 #' A wrapping function of matrxiTests::row_t_welch().
 #'
-#' @param se a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays
+#' @param object a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays
 #' @param design a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
 #'
-#' @return a data.frame with t-statistics append to rowData of \code{se}
+#' @return a data.frame with t-statistics append to rowData of \code{object}
 #' @author Chao-Jen Wong
 #'
 #' @importFrom matrixTests row_t_welch
@@ -29,7 +29,7 @@ setMethod("talus_row_t_welch", signature(object = "TalusDataSetList"),
   # display a level and control vs. contrasts
 
     res <- lapply(object, .wrap_row_t_welch, design)
-    names(res) <- names(se)
+    names(res) <- names(object)
 
     return(res)
   }
