@@ -1,4 +1,4 @@
-source('R/AllClasses.R')
+
 # tmp file just for testing
 work_dir <- '///Volumes/sarthy_j/Sarthy/Sarthy_Lab/Proteomics'
 thp1_dir <- here::here(work_dir,
@@ -50,35 +50,20 @@ readr::write_tsv(tb_sub, file='inst/extdata/test_data.tsv')
 readr::write_csv(meta_sub, file='inst/extdata/test_meta.csv')
 
 #
-# test read_talus()
+# make data/test_tdsl.rda and data/test_tds.rda
 #
-file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_data.tsv'
+file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_tdsl.tsv'
 meta_file <- '/Users/cwo11/Projects/talusR/inst/extdata/test_meta.csv'
-which_proteinid = 'Protein.Ids'
-which_fraction = 'Frx'
-which_sequence = NA
-which_run = 'Run'
-remove_few_measurements = TRUE
-split_by_fraction = TRUE
-intensity_group = ''
-metric = 'DIA-NN'
-log_transform = 'log2'
 
-meta <- read_csv(meta_file)
-tb <- read_delim(file, delim = "\t")
-
-source('R/read_talus.R')
-source('R/read-talus-utils.R')
-source('R/AllClasses.R')
-source('R/AllMethods.R')
-tds_list <- read_talus(file, meta_file,
-                       which_proteinid = "Protein.Ids",
-                       which_fraction = "Frx",
-                       which_sequence = NA,
-                       which_run = "Run",
-                       remove_few_measurements = TRUE,
-                       split_by_fraction = TRUE,
-                       intensity_group = "protein",
-                       metric = "DIA-NN",
-                       log_transform = 'log2')
+library(talusR)
+test_tdsl <- read_talus(file, meta_file,
+                        which_proteinid = "Protein.Ids",
+                        which_fraction = "Frx",
+                        which_sequence = NA,
+                        which_run = "Run",
+                        remove_few_measurements = TRUE,
+                        split_by_fraction = TRUE,
+                        intensity_group = "protein",
+                        metric = "DIA-NN",
+                        log_transform = 'log2')
 tds_list

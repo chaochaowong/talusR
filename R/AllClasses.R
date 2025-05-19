@@ -99,7 +99,7 @@ TalusDataSet <- function(assay_data, col_data, row_data,
 
 #' TalusDataSetList-class and constructor
 #'
-#' A \code{TalusDataSetList} is an S4 \code{\linkS4class{SimpleList}} containing
+#' A \code{TalusDataSetList} is an S4 \code{SimpleList} containing
 #' one or more \code{\linkS4class{TalusDataSet}} objects.
 #'
 #' @name TalusDataSetList-class
