@@ -28,7 +28,7 @@ setMethod("talus_row_t_welch", signature(object = "TalusDataSetList"),
   # check design formula: does Tx exist, is it a factor
   # display a level and control vs. contrasts
 
-    res <- lapply(obj, .wrap_row_t_welch, design)
+    res <- lapply(object, .wrap_row_t_welch, design)
     names(res) <- names(se)
 
     return(res)
@@ -49,7 +49,6 @@ setMethod("talus_row_t_welch", signature(object = "TalusDataSet"),
 
 .wrap_row_t_welch <- function(object,
                               design) {
-  require(dplyr)
   # assemble row_data to be join to the output of topTable()
   row_data <- as.data.frame(rowData(object)) %>%
     tibble::rownames_to_column(var = "id")

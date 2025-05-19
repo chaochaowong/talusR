@@ -114,9 +114,9 @@ plot_pca(tdsl, color_by='Tx')
 
 ```{r limma}
 res <- talus_limma(tdsl, design = ~ 0 + Tx)
-#limma_filt <- summary_talus(res[['chrom']], 
-#                            alpha = 0.05, 
-#                            lfc_threshold = 0.5)
+limma_filt <- summary_talus(res[['chrom']], 
+                            alpha = 0.05, 
+                            lfc_threshold = 0.5)
 ```
 
 ## Row-t test
