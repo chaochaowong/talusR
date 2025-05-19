@@ -55,11 +55,12 @@
                            intensity_group = "protein",
                            metric = "DIA-NN",
                            log_transform = 'log2') {
-  #offset = 1
+  offset = 1
   runs <- sub_meta[[which_run]]
   # assay
   assay <- tb %>% dplyr::select(any_of(runs)) %>%
     as.matrix()
+  assay <- log2(assay + offset)
   rownames(assay) <- tb %>% pull(which_proteinid)
 
   # colData

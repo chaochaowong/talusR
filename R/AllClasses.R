@@ -117,7 +117,7 @@ setValidity("TalusDataSetList", function(x) {
 #'
 #' \code{TalusDataSetList} is a \code{SimpleList} object of \code{TalusDataSet}. The constructor convert a list of \code{TalusDataSet} objects to a \code{SimpleList} object.
 #'
-#' @param lst A list of \code{TalusDataSet} objects.
+#' @param lst A \code{list} of \code{TalusDataSet} objects.
 #' @return a \code{TalusDataSetList} object.
 #' @name TalusDataSetList
 #' @rdname TalusDataSetList
@@ -126,7 +126,8 @@ setValidity("TalusDataSetList", function(x) {
 #' @author Chao-Jen Wong
 #' @export
 TalusDataSetList <- function(lst) {
-  lst <- SimpleList(lst)
-  as(lst, "TalusDataSetList")
+  # Wrap a base list in a SimpleList, then coerce
+  st <- SimpleList(lst)
+  as(st, "TalusDataSetList")
 }
 

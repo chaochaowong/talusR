@@ -9,7 +9,7 @@
 TalusDataSetList(lst)
 }
 \arguments{
-\item{lst}{A list of \code{TalusDataSet} objects.}
+\item{lst}{A \code{list} of \code{TalusDataSet} objects.}
 }
 \value{
 a \code{TalusDataSetList} object.
