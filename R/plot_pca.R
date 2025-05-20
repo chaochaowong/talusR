@@ -38,7 +38,7 @@ setMethod("plot_pca", "TalusDataSetList",
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank()
       ) +
-      theme(legend.position = c(0.7, 0.2))
+      theme(legend.position = 'bottom')
   }
 )
 
