@@ -32,14 +32,27 @@ opts_chunk$set(
 
 # Getting started
 
+## Intruduction
+The `talusR` package provides a workflow for Talus mass-spectrum data—import, Qc, differential analysis, and visualization. But it assumes that your data have already been processed by DIA-NN (e.g. `*.tsv` or `*.csv` outputs containing normalized, protein-level intensity values). It further expects one sample per mass-spectrometer run (with DIA-NN normalization applied across all runs), and that your sample metadata table includes a run column whose entries exactly match the sample names in the intensity signal file. 
 
-For now, this package only takes Talus data that are pre-processed by DIANN—i.e. that accounts for the normalization process and summary of the protein-level intensity signals (`*.tsv` or `*.csv`). 
+Key features include:
 
-__NOTE:__ The input metadata table (`*.csv`) must include a column (`run`) whose entries exactly match the sample names in that signal file.
+- **Data import & structure**  
+  Load DIA-NN–processed protein intensities into S4 objects:  
 
-This package also assumes that Talus processes only one sample in a single run (one mass-spectrometer acquisition) and with DIA-NN executed the normalization process across all the runs. 
+  - `TalusDataSet` for a whole dataset  
+  - `TalusDataSetList` (a `SimpleList` of `TalusDataSet`) for per-fraction splits  
 
-If `talusR` is not yet install:
+  Each object carries sample metadata and feature annotations.
+
+- __Quality control__: Run PCA or other multivariate checks to confirm that technical replicates and fractions cluster as expected.    
+- __Differential analysis__: use a simple wrapper around `matrixTests` to t-test and `limma` to fit linear models, define contrasts, apply independent filtering by adjusted p-value or log-fold change thresholds, and return results in `TalusResult` or `TalusResultList` objects.
+- __Visualization__: Create PCA scatterplots, volcano plots, per-protein intensity plots.
+- __Bioconductor integration__: Built on `SummarizedExperiment` and `S4Vectors`, `talusR` classes inherit the generics and methods of the Bioconductor ecosystem, for convinient plug into annotation, pathway analysis, or reporting tools.
+
+
+## Installation
+
 ```{r install-talusR, eval=FALSE}
 devtools::install_github('chaochaowong/talusR',
                          ref          = "dev",
@@ -52,7 +65,8 @@ BiocManager::install("chaochaowong/talusR@dev",
 )
 ```
 
-Load the libraries:
+## Loading libraries
+
 ```{r load-library}
 library(talusR)
 library(ggplot2)
@@ -60,9 +74,9 @@ library(dplyr)
 ```
 
 # Import Talus data
-Import test files by `read_talus()` and use `plot_pca` for quality control.
+The core function `read_talus()` imports protein-level intensity signals for whole dataset or, if `split_by_fraction = TRUE`, splits by fractions.
 
-## `split_by_fraction = FALSE`
+## Whole dataset
 When `split_by_fraction = FALSE`, `read_talus()` returns a single `TalusDataSet` instance.  This mode is ideal when:
 
 - Your data have no fraction annotations       
@@ -86,13 +100,8 @@ tds  <- talusR::read_talus(file = protein_file,
 tds
 ```
 
-### QC: PCA
-Use PCA to verify that protein-level signals from each fraction cluster as expected.
-```{r pca-tds, fig.cap='PCA on TalusDataSet.'}
-talusR::plot_pca(tds, color_by='Frx')
-```
 
-## `split_by_fraction = TRUE`
+## Per-fraction splits
 When `split_by_fraction = TRUE`, `read_talus()` returns a `TalusDataSetList` instance—a `SimpleList` of `TalusDataSet` instances, one per fraction, each holding its protein-level signals.
 
 ```{r split-by-fraction}
@@ -111,28 +120,39 @@ tdsl <- read_talus(file = protein_file,
 tdsl
 ```
 
-### QC: PCA
+# QC
+Use `plot_pca()` to assess sample clustering and variance structure.
+
+## `TalusDataSet`
+Run PCA on the full dataset to verify that protein-level signals from each fraction cluster as expected.
+```{r pca-tds, fig.cap='PCA on TalusDataSet.'}
+talusR::plot_pca(tds, color_by='Frx')
+```
+
+## `TalusDataSetList`
+When using per-fraction splits, perform PCA on each fraction independently:
 ```{r pca-for-TalusDataSetList, fig.cap='PCA performed separately on each fraction in the TalusDataSetList instance.'}
 plot_pca(tdsl, color_by='Tx')
 ```
 
-# Differential analysis
-Statistics methods:
-- `talus_limma`: a wrapping function of `limma`.   
-- `talus_rwo_t_welch`: a wrapping function of `matrixTests::row_t_welch()`.    
+# Differential analysis and visualization
 
-Other tools:
-- `summary_talus`: summarize the differential analysis and identify the significant proteins. 
-- `plot_volcano`: plot volcano plot.     
-- `plot_per_pertein`: plot signals for a protein across fractions.  
+**Core statistical methods:**
+
+- `talus_limma`: a wrapper function for `limma::lmFit()` to fit linear models and test contrasts.  
+- `talus_row_t_welch`: a wrapper function for `matrixTests::row_t_welch()` to perform per-protein Welch’s t-tests.
+
+**Summary & visualization:**
+
+- `summary_talus`: summarize differential results, flag significant proteins, and return a `data.frame` of significant proteins.
+- `plot_volcano`: create a volcano plot of log-fold changes vs adjusted p-values.  
+- `plot_per_protein`: display protein intensity profiles across fractions or conditions.  
 
 
 ## `limma`
-Use `talus_limma()`, a wrapping function of `limma`, to perform differential analysis. 
+Use `talus_limma()` to fit linear models with empirical Bayesian and moderate t-statistics across conditions (e.g. drug treatment) to perform differential analysis. 
 
-Set the factor levels for `Tx` with _DMSO_ as the reference (positive control) and _etopo_ and _doxo_ as treatment levels to be compared against _DMSO_.
-
-Define factor levels for the contrast variable, `Tx`. In this demo, `DMSO` is the positive control, `etopo` and `doxo` are treatments to be contrasted again `DMSO`. 
+Here the condition group is `Tx`: _DMSO_, _etopo_, and _doxo_. Set the factor levels so that  _DMSO_ is the reference:
 ```{r define-tx-levels}
 tx_levels <- c('DMSO', 'Etopo', 'Doxo')
 tdsl <- endoapply(tdsl, function(x) {
@@ -141,11 +161,12 @@ tdsl <- endoapply(tdsl, function(x) {
 })
 ```
 
+Next, run `talus_limma()` with a `~ 0 + Tx` design formulat to compare each treametn agains the _DMSO` control:
 ```{r limma}
 res_limma <- talus_limma(tdsl, design = ~ 0 + Tx)
 ```
 
-Summarize the limma results and filter to retain the significant proteins. 
+Finally, summarize and filter for significant proteins with with adjusted p-value < 0.05 and |log₂ fold change| > 0.5.
 ```{r summarize-limma}
 limma_filt <- summary_talus(res_limma[['chrom']], 
                             alpha = 0.05, 
@@ -162,15 +183,17 @@ plot_volcano(res_limma[['chrom']],
              label_top_n=10)
 ```
 
-## Row-t test
+## t-test
 
-Perform row-t tests on by `talus_row_t_welch()`. It returns a list of `data.frame` if the input is is a `TalusDataSetList` object.  
+Apply `talus_row_t_welch()` to perform per-protein Welch’s t-tests on the `TalusDataSetList`:
+
 ```{r row-t-welch}
 res_t <- talus_row_t_welch(tdsl, design = ~ 0 + Tx)
 names(res_t)
 ```
 
-Display summary of the t tests and filter the results by `summary_talus()`. The input must be a `data.frame`:
+Filter significant proteins using summary_talus() (adjusted p-value < 0.05, |log₂FC| > 0.5):
+
 ```{r show-row-t-summary}
 # show contrast level
 cat('\nContrast levels:\n')
@@ -194,6 +217,7 @@ plot_volcano(res_t[['chrom']],
 ```
 
 ## Per-protein plot
+Extract a protein ID (e.g. TOP2A) and plot the intensities across conditions (e.g., fractions and treatments):
 ```{r plot-per-protein}
 protein_id <- as.data.frame(rowData(tdsl[[1]])) %>% 
   dplyr::filter(Genes == 'TOP2A') %>% pull(Protein.Group)
@@ -204,7 +228,18 @@ plot_per_protein(tdsl,
   labs(title = 'TOP2A')
 ```
 
+Or just for _chrom_ fraction only:
+```{r plot-per-protein-chrom}
+plot_per_protein(tdsl[['chrom']], 
+                 protein_id = 'P11388;P11388-2;P11388-3;P11388-4',
+                 group_by = 'Tx') +
+  labs(title = 'TOP2A')
+```
 
 
+# sessionInfo
+```{r sessioninfo}
+sessionInfo()
+```
 
 

@@ -59,7 +59,7 @@ setMethod("plot_per_protein", "TalusDataSet",
            protein_id,
            group_by) {
 
-    if (protein_id %in% rownames(object))
+    if (!protein_id %in% rownames(object))
       stop(sprintf("Protein ID '%s' not found.", protein_id))
 
     col_data <- colData(object)
