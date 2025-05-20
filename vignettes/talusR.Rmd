@@ -32,6 +32,7 @@ opts_chunk$set(
 
 # Getting started
 
+
 For now, this package only takes Talus data that are pre-processed by DIANN—i.e. that accounts for the normalization process and summary of the protein-level intensity signals (`*.tsv` or `*.csv`). 
 
 __NOTE:__ The input metadata table (`*.csv`) must include a column (`run`) whose entries exactly match the sample names in that signal file.
@@ -51,9 +52,11 @@ BiocManager::install("chaochaowong/talusR@dev",
 )
 ```
 
-Load the library:
+Load the libraries:
 ```{r load-library}
 library(talusR)
+library(ggplot2)
+library(dplyr)
 ```
 
 # Import Talus data
@@ -131,12 +134,13 @@ Set the factor levels for `Tx` with _DMSO_ as the reference (positive control) a
 
 Define factor levels for the contrast variable, `Tx`. In this demo, `DMSO` is the positive control, `etopo` and `doxo` are treatments to be contrasted again `DMSO`. 
 ```{r define-tx-levels}
-tx_levels <- c('DMSO', 'etopo', 'doxo')
+tx_levels <- c('DMSO', 'Etopo', 'Doxo')
 tdsl <- endoapply(tdsl, function(x) {
   colData(x)$Tx <- factor(colData(x)$Tx, levels = tx_levels)
   x
 })
 ```
+
 ```{r limma}
 res_limma <- talus_limma(tdsl, design = ~ 0 + Tx)
 ```
