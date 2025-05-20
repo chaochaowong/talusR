@@ -2,9 +2,9 @@
 #'
 #' Given a protein ID, plot the MS intensity signal
 #'
-#' @param se SummarizedExperience instance (SE) or list of SE containing the transformed protein abundance.
+#' @param object a \code{TalusDataSet} or \code{TalusDataSetList} instance containing the transformed protein abundance.
 #' @param protein_id Protein ID
-#' @param group_by Group by a factor in the meta file
+#' @param group_by group by a column (factor) in the meta file when plotting
 #'
 #' @importFrom purrr map_dfr
 #' @importFrom tibble rownames_to_column
@@ -16,24 +16,31 @@
 #' @author Chao-Jen Wong
 #'
 #' @export
-#'
-per_protein_abun <- function(se, protein_id, category_by) {
-  # check if protein_id exist as part of the rownames
-  require(ggplot2)
-  require(tibble)
-  require(tidyr)
+#' @rdname plot_per_protein
+setGeneric("plot_per_protein",
+           function(object, protein_id, group_by)
+             standardGeneric("plot_per_protein"))
 
-  if (is.list(se)) {
-    # if( protein_id %in% rownames(se[[1]]))
-    # stop(sprintf("Protein ID '%s' not found.", protein_id))
-    if (!rlang::has_name(colData(se[[1]]), category_by)) {
-      stop(sprintf("Column '%s' not found in %s", which_run, meta))
+#' @rdname plot_per_protein
+#' @aliases plot_per_protein,TalusDataSetList
+#' @exportMethod plot_per_protein
+setMethod("plot_per_protein", "TalusDataSetList",
+   function(object,
+            protein_id,
+            group_by) {
+
+    if (!protein_id %in% rownames(object[[1]]))
+      stop(sprintf("Protein ID '%s' not found.", protein_id))
+
+    col_data <- colData(object[[1]])
+    if (!rlang::has_name(colData(object[[1]]), group_by)) {
+      stop(sprintf("Column '%s' not found in the colData of the object", group_by))
     }
 
-    df <- map_dfr(se, .extract_per_protein_abun, protein_id,
+    df <- map_dfr(object, .extract_per_protein, protein_id,
       .id = "source"
     )
-    ggplot(df, aes_string(x = category_by, y = "abundance")) +
+    ggplot(df, aes_string(x = group_by, y = "abundance")) +
       geom_point(size = 2, alpha = 0.8, color = "steelblue") +
       theme_bw() +
       facet_wrap(~source, ncol = 1, scales = "free_y") +
@@ -41,13 +48,28 @@ per_protein_abun <- function(se, protein_id, category_by) {
       theme(
         panel.grid.minor = element_blank()
       )
-  } else {
-    if (!protein_id %in% rownames(se)) {
+   }
+)
+
+#' @rdname plot_per_protein
+#' @aliases plot_per_protein,TalusDataSet
+#' @exportMethod plot_per_protein
+setMethod("plot_per_protein", "TalusDataSet",
+  function(object,
+           protein_id,
+           group_by) {
+
+    if (protein_id %in% rownames(object))
       stop(sprintf("Protein ID '%s' not found.", protein_id))
+
+    col_data <- colData(object)
+    if (!rlang::has_name(col_data, group_by)) {
+      stop(sprintf("Column '%s' not found in the colData of the object", group_by))
     }
 
-    df <- .extract_per_protein_abun(se, protein_id)
-    ggplot(df, aes_string(x = category_by, y = "abundance")) +
+
+    df <- .extract_per_protein(object, protein_id)
+    ggplot(df, aes_string(x = group_by, y = "abundance")) +
       geom_point(size = 2, alpha = 0.8, color = "steelblue") +
       theme_bw() +
       labs(title = protein_id) +
@@ -55,9 +77,9 @@ per_protein_abun <- function(se, protein_id, category_by) {
         panel.grid.minor = element_blank()
       )
   }
-}
+)
 
-.extract_per_protein_abun <- function(object, protein_id) {
+.extract_per_protein <- function(object, protein_id) {
   col_data <- as.data.frame(colData(object)) %>%
     tibble::rownames_to_column(var = "sample")
 

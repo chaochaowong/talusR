@@ -10,7 +10,8 @@
 #' @rdname plot_pca
 #' @export
 setGeneric("plot_pca",
-           function(object, ...) standardGeneric("plot_pca"))
+           function(object, top_n = 500, color_by)
+             standardGeneric("plot_pca"))
 
 #' @rdname plot_pca
 #' @aliases plot_pca,TalusDataSetList

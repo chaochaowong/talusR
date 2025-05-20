@@ -8,7 +8,7 @@
 \alias{plot_pca,TalusDataSet}
 \title{Simple PCA plot for TalusDataSet and TalusDataSetList}
 \usage{
-plot_pca(object, ...)
+plot_pca(object, top_n = 500, color_by)
 
 \S4method{plot_pca}{TalusDataSetList}(object, top_n = 500, color_by)
 

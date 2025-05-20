@@ -149,6 +149,11 @@ names(res_t)
 
 Display summary of the t tests and filter the results by `summary_talus()`. The input must be a `data.frame`:
 ```{r show-row-t-summary}
+# show contrast level
+cat('\nContrast levels:\n')
+names(res_t[['chrom']])
+
+# summarize the result per fraction
 ttest_filt <- summary_talus(res_t[['chrom']], 
                             alpha = 0.05, 
                             lfc_threshold = 0.5)
@@ -156,11 +161,20 @@ ttest_filt <- summary_talus(res_t[['chrom']],
 
 Visualize the statistics by `plot_volcano()`. 
 ```{r viz-t-welch-by-volcano}
+# try to re-arrange the contrast_levels
 plot_volcano(res_t[['chrom']], 
              alpha = 0.05,
              lfc_threshold = 0.5, 
-             use_adjP = TRUE, 
+             use_adjP = TRUE,
+             contrast_levels = names(res_t[['chrom']])[c(2, 1)],
              label_top_n=10)
+```
+
+## Per-gene plot
+```{r plot-per-protein}
+plot_per_protein(tdsl, 
+                 protein_id = 'P11388;P11388-2;P11388-3;P11388-4',
+                 group_by = 'Tx')
 ```
 
 
