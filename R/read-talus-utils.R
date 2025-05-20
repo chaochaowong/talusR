@@ -39,7 +39,6 @@
 
   }
 
-  cat('\nclass of tdsl: ', class(tds))
   return(tds)
 }
 
