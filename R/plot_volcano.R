@@ -1,14 +1,14 @@
-#' Volcano plots for TalusResults
+#' Volcano plots for differential analysis
 #'
-#' Valcano plots for TalusResults object
+#' Volcano plots for the differential analysis results
 #'
-#' @param res a \code{TalusResults} instance containing results returned by \code{talus_limma} or \code{talus_row_t_walch}.
-#' @param alpha the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.
+#' @param res a \code{data.frame} containing results returned by \code{talus_limma} or \code{talus_row_t_walch}.
+#' @param alpha the significance adjusted p-value cutoff for independent filtering. Default to 0.05.
 #' @param lfc_threshold a non-negative values of significance log fold change threshold for independent filtering. Default to 0.5.
-#' @param use_adjP logical to indicate wether to use 'adj.P.val' or 'P.Value'. Default to TRUE.
-#' @param contrast_levels Default to NULL.
-#' @param label_top_n
-#' @param return_data logical to return data only with mutated `logp` and `sig` columns
+#' @param use_adjP logical to indicate whether to use 'adj.P.val' or 'P.Value'. Default to TRUE.
+#' @param contrast_levels a vector of strings describing Default to NULL.
+#' @param label_top_n a numeric specifying how many significant proteins should be labelled. Default to 10.
+#' @param return_data logical to return data.frame data only with mutated `logp` and `sig` columns. Default to FALSE.
 #' @import ggplot2
 #' @import ggrepel
 #' @importFrom dplyr if_else mutate case_when

@@ -2,7 +2,6 @@
 
 export(TalusDataSet)
 export(TalusDataSetList)
-export(get_ModelID)
 export(plot_pca)
 export(plot_per_protein)
 export(plot_volcano)

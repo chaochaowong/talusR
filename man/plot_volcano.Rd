@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_volcano.R
 \name{plot_volcano}
 \alias{plot_volcano}
-\title{Volcano plots for TalusResults}
+\title{Volcano plots for differential analysis}
 \usage{
 plot_volcano(
   res,
@@ -15,20 +15,22 @@ plot_volcano(
 )
 }
 \arguments{
-\item{res}{a \code{TalusResults} instance containing results returned by \code{talus_limma} or \code{talus_row_t_walch}.}
+\item{res}{a \code{data.frame} containing results returned by \code{talus_limma} or \code{talus_row_t_walch}.}
 
-\item{alpha}{the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.}
+\item{alpha}{the significance adjusted p-value cutoff for independent filtering. Default to 0.05.}
 
 \item{lfc_threshold}{a non-negative values of significance log fold change threshold for independent filtering. Default to 0.5.}
 
-\item{use_adjP}{logical to indicate wether to use 'adj.P.val' or 'P.Value'. Default to TRUE.}
+\item{use_adjP}{logical to indicate whether to use 'adj.P.val' or 'P.Value'. Default to TRUE.}
 
-\item{contrast_levels}{Default to NULL.}
+\item{contrast_levels}{a vector of strings describing Default to NULL.}
 
-\item{return_data}{logical to return data only with mutated \code{logp} and \code{sig} columns}
+\item{label_top_n}{a numeric specifying how many significant proteins should be labelled. Default to 10.}
+
+\item{return_data}{logical to return data.frame data only with mutated \code{logp} and \code{sig} columns. Default to FALSE.}
 }
 \description{
-Valcano plots for TalusResults object
+Volcano plots for the differential analysis results
 }
 \author{
 Chao-Jen Wong
