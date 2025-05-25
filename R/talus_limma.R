@@ -1,9 +1,10 @@
-#' Wrapper function of limma for differential analysis
-#'
-#' A wrapper function using lmFit() to perform differential analysis
+#’ Differential analysis via limma for TalusDataSet objects
+#’
+#’ Fit linear models and contrasts using \code{limma::lmFit} and \code{limma::eBayes}
+#’ on a \code{TalusDataSet} or each element of a \code{TalusDataSetList}.
 #' @param object a \code{TalusDataSet} or \code{TalusDataSetList} instance containing protein log-transform assays
 #' @param desgin a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
-#' @return a \code{TalusResult} or \code{TalusResultList} instance.
+#' @return a \code{TalusResult} if \code{object} is a \code{TalusDataSet}; or a \code{TalusResultList} if \code{TalusDataSetList}.
 #'
 #' @import limma
 #' @importFrom tibble rownames_to_column
