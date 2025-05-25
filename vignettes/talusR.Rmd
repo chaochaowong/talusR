@@ -2,7 +2,7 @@
 title: "Introduction to talusR"
 author:
   - name: "Chao-Jen Wong"
-    affiliation: "Seattle Children's Research Institute"
+    affiliation: "Sarthy Lab, Seattle Children's Research Institute"
     email: chao-jen.wong@seattlechildrens.org
 date: "`r Sys.Date()`"
 output:
@@ -161,7 +161,7 @@ tdsl <- endoapply(tdsl, function(x) {
 })
 ```
 
-Next, run `talus_limma()` with a `~ 0 + Tx` design formulat to compare each treametn agains the _DMSO` control:
+Next, run `talus_limma()` with a `~ 0 + Tx` design formula to compare each treatment against the `DMSO` control:
 ```{r limma}
 res_limma <- talus_limma(tdsl, design = ~ 0 + Tx)
 ```
