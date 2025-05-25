@@ -1,10 +1,10 @@
 #' Import Talus files
 #'
 #' Import Talus files that were processed by DIANN and convert to
-#' SummarizedExperiment instance. Can split the data into three instancs
-#' containing fractions in nuc, cyto, and plasm.
+#' SummarizedExperiment instance. Can split the data into three instances
+#' containing fractions in nuc, cyto, and chrom.
 #'
-#' @param file a path to a mass-spectrum intensity signal matric file (TSV OR CSV) or a connection.
+#' @param file a path to a mass-spectrum intensity signal matrices file (TSV OR CSV) or a connection.
 #' @param meta_data a path to the metadata file (CSV) for the runs (samples).
 #' @param which_proteinid which column in the \code{file} input represents the protein id
 #' @param which_sequence which column in the \code{file} input represents the sequence of the protein

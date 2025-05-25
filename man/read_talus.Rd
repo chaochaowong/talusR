@@ -20,7 +20,7 @@ read_talus(
 )
 }
 \arguments{
-\item{file}{a path to a mass-spectrum intensity signal matric file (TSV OR CSV) or a connection.}
+\item{file}{a path to a mass-spectrum intensity signal matrices file (TSV OR CSV) or a connection.}
 
 \item{which_proteinid}{which column in the \code{file} input represents the protein id}
 
@@ -45,6 +45,6 @@ a \code{TalusDataSetList} object if \code{split_by_fraction} is TRUE, otherwise 
 }
 \description{
 Import Talus files that were processed by DIANN and convert to
-SummarizedExperiment instance. Can split the data into three instancs
-containing fractions in nuc, cyto, and plasm.
+SummarizedExperiment instance. Can split the data into three instances
+containing fractions in nuc, cyto, and chrom.
 }
