@@ -1,12 +1,13 @@
-#' Simple PCA plot for TalusDataSet and TalusDataSetList
+#' Simple PCA scatter plot for TalusDataSet and TalusDataSetList
 #'
-#' This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
+#' Creates a PC1 vs PC2 scatter to inspect sample clustering, batch effects, etc.
 #'
-#' @param tds a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data
-#' @param top_n number of top proteins to use for principal components, selected by highest row variance
-#' @param color_by a character string in colData to use for coloring
+#' @param object a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data.
+#' @param top_n number of top proteins to use for principal components, selected by highest row variance (default 500).
+#' @param color_by column name in `colData(object)` for point coloring (default none).
 #' @return
 #'   a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
+#' @name plot_pca
 #' @rdname plot_pca
 #' @export
 setGeneric("plot_pca",

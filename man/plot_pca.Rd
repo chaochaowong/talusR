@@ -6,7 +6,7 @@
 \alias{plot_pca,TalusDataSetList}
 \alias{plot_pca,TalusDataSet-method}
 \alias{plot_pca,TalusDataSet}
-\title{Simple PCA plot for TalusDataSet and TalusDataSetList}
+\title{Simple PCA scatter plot for TalusDataSet and TalusDataSetList}
 \usage{
 plot_pca(object, top_n = 500, color_by)
 
@@ -15,15 +15,15 @@ plot_pca(object, top_n = 500, color_by)
 \S4method{plot_pca}{TalusDataSet}(object, top_n = 500, color_by)
 }
 \arguments{
-\item{top_n}{number of top proteins to use for principal components, selected by highest row variance}
+\item{object}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data.}
 
-\item{color_by}{a character string in colData to use for coloring}
+\item{top_n}{number of top proteins to use for principal components, selected by highest row variance (default 500).}
 
-\item{tds}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data}
+\item{color_by}{column name in \code{colData(object)} for point coloring (default none).}
 }
 \value{
 a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
 }
 \description{
-This simple PC1 vs PC2 PCA helps to check for batch effects and the like.
+Creates a PC1 vs PC2 scatter to inspect sample clustering, batch effects, etc.
 }
