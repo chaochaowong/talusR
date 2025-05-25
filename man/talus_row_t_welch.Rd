@@ -6,7 +6,7 @@
 \alias{talus_row_t_welch,TalusDataSetList}
 \alias{talus_row_t_welch,TalusDataSet-method}
 \alias{talus_row_t_welch,TalusDataSet}
-\title{Per-protein t-Welch testing}
+\title{Per-protein Welch t-test for \code{TalusDataSet} or \code{TalusDataSetList} objects}
 \usage{
 talus_row_t_welch(object, design = ~0 + Tx)
 
@@ -23,7 +23,7 @@ talus_row_t_welch(object, design = ~0 + Tx)
 a data.frame with t-statistics append to rowData of \code{object}
 }
 \description{
-A wrapping function of matrxiTests::row_t_welch().
+A wrapping function of \code{matrixTests::row_t_welch()} to perform per-protein Welch’s t-tests
 }
 \author{
 Chao-Jen Wong

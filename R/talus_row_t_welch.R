@@ -1,6 +1,7 @@
-#' Per-protein t-Welch testing
+#' Per-protein Welch t-test for \code{TalusDataSet} or \code{TalusDataSetList} objects
 #'
-#' A wrapping function of matrxiTests::row_t_welch().
+#' A wrapping function of \code{matrixTests::row_t_welch()} to perform per-protein Welch’s t-tests
+#’ on a \code{TalusDataSet} or each element of a \code{TalusDataSetList}.
 #'
 #' @param object a \code{TalusDataSet} or \code{TalusDataSetList} instance with log-transform assays
 #' @param design a formula to create a model matrix. Default to ~0 + Tx, where \code{Tx} is a factor from colData of \code{se}
