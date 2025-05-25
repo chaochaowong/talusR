@@ -1,11 +1,14 @@
-#' Simple point plot to show per-protein aboundance
+#' Simple point plot to show per-protein abundance
 #'
-#' Given a protein ID, plot the MS intensity signal
+#' Given a protein ID, plots its MS intensity across samples.
 #'
 #' @param object a \code{TalusDataSet} or \code{TalusDataSetList} instance containing the transformed protein abundance.
-#' @param protein_id Protein ID
-#' @param group_by group by a column (factor) in the meta file when plotting
+#' @param protein_id
+#'   A character string giving the protein to plot. Must exactly match one of
+#'   the row names in `object` (i.e. `rownames(object)`), otherwise an error is raised.
+#' @param group_by a character string giving a factor column in `colData(object)` for grouping.
 #'
+#' @return @return returns a ggplot object),
 #' @importFrom purrr map_dfr
 #' @importFrom tibble rownames_to_column
 #' @importFrom stringr str_detect

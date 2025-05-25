@@ -6,7 +6,7 @@
 \alias{plot_per_protein,TalusDataSetList}
 \alias{plot_per_protein,TalusDataSet-method}
 \alias{plot_per_protein,TalusDataSet}
-\title{Simple point plot to show per-protein aboundance}
+\title{Simple point plot to show per-protein abundance}
 \usage{
 plot_per_protein(object, protein_id, group_by)
 
@@ -17,12 +17,16 @@ plot_per_protein(object, protein_id, group_by)
 \arguments{
 \item{object}{a \code{TalusDataSet} or \code{TalusDataSetList} instance containing the transformed protein abundance.}
 
-\item{protein_id}{Protein ID}
+\item{protein_id}{A character string giving the protein to plot. Must exactly match one of
+the row names in \code{object} (i.e. \code{rownames(object)}), otherwise an error is raised.}
 
-\item{group_by}{group by a column (factor) in the meta file when plotting}
+\item{group_by}{a character string giving a factor column in \code{colData(object)} for grouping.}
+}
+\value{
+@return returns a ggplot object),
 }
 \description{
-Given a protein ID, plot the MS intensity signal
+Given a protein ID, plots its MS intensity across samples.
 }
 \author{
 Chao-Jen Wong
