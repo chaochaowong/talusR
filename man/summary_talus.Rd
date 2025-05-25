@@ -7,11 +7,14 @@
 summary_talus(object, alpha = NULL, lfc_threshold = NULL)
 }
 \arguments{
-\item{alpha}{the significance adjust p-vluae cutoff for independent filtering. Default to 0.05.}
+\item{alpha}{adjusted p-value cutoff for significance (default \code{0.05}).}
 
 \item{lfc_threshold}{a non-negative values of significance log fold change threshold for independent filtering. Default to NULL.}
 
-\item{objecta}{a list of \code{data.frame} containing limma's \code{lmFit} results of all contrasts.}
+\item{objecta}{a list of \code{data.frame} returned by \code{talus_limma} or \code{talus_row_t_welch} of all contrasts.}
+}
+\value{
+a list of data frames (one per contrast), each filtered to keep only significant features.
 }
 \description{
 Summarize Talus differential results returned by either by \code{talus_limma} or \code{talus_row_t_welch}.
