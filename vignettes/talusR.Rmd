@@ -48,18 +48,18 @@ Key features include:
 - __Quality control__: Run PCA or other multivariate checks to confirm that technical replicates and fractions cluster as expected.    
 - __Differential analysis__: use a simple wrapper around `matrixTests` to t-test and `limma` to fit linear models, define contrasts, apply independent filtering by adjusted p-value or log-fold change thresholds, and return results in `TalusResult` or `TalusResultList` objects.
 - __Visualization__: Create PCA scatterplots, volcano plots, per-protein intensity plots.
-- __Bioconductor integration__: Built on `SummarizedExperiment` and `S4Vectors`, `talusR` classes inherit the generics and methods of the Bioconductor ecosystem, for convinient plug into annotation, pathway analysis, or reporting tools.
+- __Bioconductor integration__: Built on `SummarizedExperiment` and `S4Vectors`, `talusR` classes inherit the generics and methods of the Bioconductor ecosystem, for convenient plug into annotation, pathway analysis, or reporting tools.
 
 
 ## Installation
 
 ```{r install-talusR, eval=FALSE}
+# if you've installed the Bioconductor dependencies, then
 devtools::install_github('chaochaowong/talusR',
-                         ref          = "dev",
                          build_vignettes = TRUE)
 
-# or install along with the Bioconductor dependencies with appropriate version
-BiocManager::install("chaochaowong/talusR@dev",
+# if haven't installed the Bioconductor dependencies, then
+BiocManager::install("chaochaowong/talusR",
                      dependencies = TRUE
                      build_vignettes = TRUE
 )
