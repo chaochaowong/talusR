@@ -33,12 +33,12 @@ opts_chunk$set(
 # Getting started
 
 ## Intruduction
-The `talusR` package provides a workflow for Talus mass-spectrum data—import, Qc, differential analysis, and visualization. But it assumes that your data have already been processed by DIA-NN (e.g. `*.tsv` or `*.csv` outputs containing normalized, protein-level intensity values). It further expects one sample per mass-spectrometer run (with DIA-NN normalization applied across all runs), and that your sample metadata table includes a run column whose entries exactly match the sample names in the intensity signal file. 
+The `talusR` package provides a workflow for Talus mass-spectrum data—import, QC, differential analysis, and visualization. But it assumes that your data have already been processed by DIA-NN (e.g. `*.tsv` or `*.csv` outputs containing normalized, protein-level intensity values). It further expects one sample per mass-spectrometer run (with DIA-NN normalization applied across all runs), and that your sample metadata table includes a run column whose entries exactly match the sample names in the intensity signal file. 
 
 Key features include:
 
 - **Data import & structure**  
-  Load DIA-NN–processed protein intensities into S4 objects:  
+  Import DIA-NN–processed protein intensities into S4 objects:  
 
   - `TalusDataSet` for a whole dataset  
   - `TalusDataSetList` (a `SimpleList` of `TalusDataSet`) for per-fraction splits  
