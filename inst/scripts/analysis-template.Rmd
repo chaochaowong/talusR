@@ -1,0 +1,333 @@
+---
+title: "RD anthras Talus data analysis"
+author: "John Doe"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: cosmo
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: show
+    highlight: tango
+    fig_caption: true
+---
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+});
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = TRUE, 
+                      echo = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      fig.align = 'center',
+                      knitr.svg.object = TRUE,
+                      dev=c('png', 'svglite', 'pdf'))
+```
+
+```{r load-library}
+# load library
+library(talusR) # from devtools::install_github('chaochaowong/talusR', ref = "dev")
+library(tidyverse)
+library(writexl)
+library(ggplot2)
+library(ggbeeswarm)
+library(ggiraph)
+library(ggrepel)
+library(clusterProfiler)
+library(org.Hs.eg.db)     # for human GO/ID mapping
+library(ReactomePA)       # for Reactome pathway analysis
+```
+
+```{r define-path}
+# define path
+cell_line <- 'RD'
+work_dir <- work_dir <- '///Volumes/Active/sarthy_j/Sarthy/Sarthy_Lab/Proteomics'
+main_dir <- here::here(work_dir,
+                       'talus_results',
+                       'GB_RD-RH30-RH4_anthras_20240813')
+stat_dir <- here::here(main_dir, 'stats')
+fig_dir  <- here::here(main_dir, 'figures')
+data_dir <- here::here(main_dir, 'data')
+
+source(here::here(main_dir, 'scripts', 'tools.R'))
+```
+
+
+```{r load-rds}
+# load Load `TalusDataSet` and `TalusDataSetList` objects 
+tds <- readRDS(here::here(data_dir, 
+                          paste0(cell_line, '-tds.rds')))
+tdsl <- readRDS(here::here(data_dir, 
+                           paste0(cell_line, '-tdsl.rds')))
+```
+
+# QC by PCA
+Using the full dataset to verify that the protein-level signals from each fraction cluster as expected.
+
+```{r pca-tds, fig.cap='PCA on TalusDataSet.'}
+talusR::plot_pca(tds, color_by='Frx')
+```
+
+Visualize sample variance by PCA for each fraction:
+```{r qc-pca-tdsl}
+plot_pca(tdsl, color_by = 'Tx')
+```
+
+# Differentail analysis
+Use limma to fit linear models, define contrasts, apply independent filtering by adjusted p-value < 0.05 and |log2FC| = 0.5
+
+## `chrom`
+```{r talus_limma}
+lm <- talus_limma(tdsl, design = ~ 0 + Tx)
+chrom_sig <- summary_talus(lm[['chrom']], 
+                           alpha = 0.05, 
+                           lfc_threshold = 0.5)
+```
+
+__Volcano plots__:
+```{r chrom-vocano, fig.cap='chrom limma volcano plot.'}
+plot_volcano(lm[['chrom']], 
+             alpha = 0.05,
+             lfc_threshold = 0.5, 
+             use_adjP = TRUE, 
+             contrast_levels = names(lm[['chrom']]),
+             label_top_n=30)
+file_name <- paste0(cell_line, '-chrom-limma-volcano.pdf')
+ggsave(file = here::here(fig_dir, file_name))
+file_name <- paste0(cell_line, '-chrom-limma-volcano.png')
+ggsave(file = here::here(fig_dir, file_name))
+```
+
+
+## `nuc`
+```{r nuc-sig}
+nuc_sig <- summary_talus(lm[['nuc']], 
+                         alpha = 0.05, 
+                         lfc_threshold = 0.5)
+```
+
+__Volcano plot__
+```{r nuc-volcano, fig.cap='nuc limma volcano plot.'}
+plot_volcano(lm[['nuc']], 
+             alpha = 0.05,
+             lfc_threshold = 0.5, 
+             use_adjP = TRUE, 
+             contrast_levels = names(lm[['nuc']]),
+             label_top_n=30)
+ggsave(file=here::here(fig_dir, 
+                       paste0(cell_line, '-nuc-limma-volcano.pdf')))
+ggsave(file=here::here(fig_dir, 
+                       paste0(cell_line, '-nuc-limma-volcano.png')))
+```
+
+# Per-protein plot
+__Per protein plot__: _TOP2A_
+```{r per-protein-plot, fig.cap='TOP2A Singal in all fraction and treatments.'}
+protein_id <- as.data.frame(rowData(tdsl[[1]])) %>% 
+  dplyr::filter(Genes == 'TOP2A') %>% pull(Protein.Group)
+
+plot_per_protein(tdsl,
+                 protein_id = protein_id,
+                 group_by = 'Tx') +
+  labs(title = 'TOP2A')
+
+ggsave(
+  file=here::here(fig_dir, 
+                  paste0(cell_line,
+                         '-per-protein-plot-TOP2A-chrom-nuc.pdf')))
+ggsave(
+  file=here::here(fig_dir, 
+                  paste0(cell_line,
+                         '-per-protein-plot-TOP2A-chrom-nuc.png')))
+```
+
+```{r per-protein-chrom}
+plot_per_protein(tdsl[['chrom']],
+                 protein_id = protein_id,
+                 group_by = 'Tx') +
+  labs(title = 'TOP2A')
+
+ggsave(
+  file=here::here(fig_dir, 
+                  paste0(cell_line,
+                         '-per-protein-plot-TOP2A-chrom.pdf')))
+ggsave(
+  file=here::here(fig_dir, 
+                  paste0(cell_line,
+                         '-per-protein-plot-TOP2A-chrom.png')))
+```
+
+# Pathway analysis
+Summary of the pathway analysis for GO term (BP) and Reactome pathways.
+
+Cutoff values:
+
+- `pvalueCutoff_go` = 0.01,
+- `qvalueCutoff_go` = 0.1,
+- `pvalueCutoff_reactome` = 0.01,
+- `qvalueCutoff_reactome` = 0.1
+
+__Output file__:
+```{r call-pathyway-analysis, echo=FALSE, include=FALSE}
+fraction <- 'chrom'
+source(here::here(main_dir, 'scripts', 'tools.R'))
+pathway_stats <-
+  .pathway_analysis(x = tdsl[[fraction]],
+                    talus_sig = chrom_sig, 
+                    pvalueCutoff_go = 0.01,
+                    qvalueCutoff_go = 0.1,
+                    pvalueCutoff_reactome = 0.01,
+                    qvalueCutoff_reactome = 0.1)
+
+# generate output
+fns <- lapply(names(pathway_stats), function(x) {
+  file_name <- paste0(cell_line, '-', fraction, '-',
+                      x, '-pathway-analysis.xlsx')
+  writexl::write_xlsx(pathway_stats[[x]],
+                      path = here::here(stat_dir, file_name))
+  return(file_name)
+})
+print(fns)
+```
+
+__Summary__:
+```{r summary-pathway-stats, results='asis', echo=FALSE}
+for (i in names(chrom_sig)) {
+  df <- data.frame(
+    contrast = i,
+    up_protein = sum(chrom_sig[[i]]$logFC > 0, na.rm=TRUE),
+    down_protein = sum(chrom_sig[[i]]$logFC <= 0, na.rm=TRUE),
+    n_enrich_go_by_up = nrow(pathway_stats[[i]]$ego_up),
+    n_enrich_go_by_down = nrow(pathway_stats[[i]]$ego_down),
+    n_enrich_pathyway_by_up = nrow(pathway_stats[[i]]$ereact_up),
+    n_enrich_pathyway_by_down = nrow(pathway_stats[[i]]$ereact_down))
+  # print the table
+  cat(
+    knitr::kable(
+      df,
+      caption = paste0(cell_line, ":", fraction,
+                       " — pathway analysis for ", i)
+    ) %>%
+    kableExtra::kable_styling("striped", full_width = FALSE)
+  )
+  cat("\n\n")  # add a little spacing between tables
+  
+}
+```
+
+# Depmap vs. significent proteins
+
+Extract _DepMap_ score for cell line `r cell_line` and plot a scatter plot of log2FC vs. _DepMap_ score.
+
+```{r load-depmap, echo=FALSE}
+library(depmap24Q4)
+data(crispr_gene_effect)
+data(model)
+model_id <- get_ModelID(cell_line)
+depmap_score <- crispr_gene_effect %>%
+  dplyr::filter(str_detect(ModelID, model_id)) %>%
+  tidyr::gather(SYMBOL, depmap_score, -ModelID)
+```
+
+```{r attach-depmap-to-sig, echo=FALSE}
+# attach depmap_score to sig. proteins
+new_chrom_sig <- map_dfr(chrom_sig, function(x) {
+  x %>%
+    dplyr::left_join(depmap_score, by='SYMBOL')
+}, .id = 'contrast_name') %>%
+  dplyr::mutate(contrast_name = factor(contrast_name,
+                                       levels = names(chrom_sig)))
+```
+
+```{r logfc-vs-dapmap, echo=FALSE, fig.cap='Proteins showed differential abundance w.r.t. DMSO: logFC (limma) vs. DepMap score (24Q4)'}
+library(ggplot2)
+library(ggrepel)
+
+ggplot(new_chrom_sig, aes(
+  x     = depmap_score,
+  y     = logFC,
+  color = logFC > 0,         # continuous colouring if you like
+  label = SYMBOL          # label text
+)) +
+  geom_point(size = 1.5, alpha = 0.8, show.legend = FALSE) +
+  geom_text_repel(
+    size         = 2.5,
+    #max.overlaps = Inf,
+    box.padding  = 0.3,
+    segment.alpha = 0.5, 
+    show.legend = FALSE
+  ) +
+  scale_colour_manual(
+    name   = "logFC sign",
+    values = c(`FALSE` = "steelblue",   # logFC ≤ 0
+               `TRUE`  = "firebrick"),  # logFC  > 0
+    labels = c(`FALSE` = "≤ 0", 
+               `TRUE`  = "> 0")
+  )  +
+  labs(
+    y     = expression(log[2]~Fold~Change),
+    x     = "DepMap dependency score"
+  ) +
+  facet_wrap(~contrast_name, nrow=2) +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank())
+
+file_name <- paste0(cell_line, '-', fraction,
+                    'sig-protein-limma-lfc-vs-depmap.pdf')
+ggsave(file.path(fig_dir, file_name) )
+file_name <- paste0(cell_line, '-', fraction,
+                    'sig-protein-limma-lfc-vs-depmap.png')
+ggsave(file.path(fig_dir, file_name) )
+```
+
+
+# Output
+- print out all `limma` statistics
+- print out the significant protein statistics along with depmap
+
+```{r print-statistics, echo=FALSE}
+# all statistics for chrom and nuc with depmap score append
+
+# chrom
+lm_chrom <- map(lm[['chrom']], function(x) {
+  x %>%
+    dplyr::left_join(depmap_score, by='SYMBOL')
+})
+file_name <- paste0(cell_line, '-chrom-limma-statistics-depmap.xlsx')
+print(file_name)
+writexl::write_xlsx(lm_chrom,
+                    here::here(stat_dir, file_name))
+# nuc
+lm_nuc <- map(lm[['nuc']], function(x) {
+  x %>%
+    dplyr::left_join(depmap_score, by='SYMBOL')
+})
+file_name <- paste0(cell_line, '-nuc-limma-statistics-depmap.xlsx')
+print(file_name)
+writexl::write_xlsx(lm_nuc,
+                    here::here(stat_dir, file_name))
+
+# sig for chrom only
+new_chrom_sig <- map(chrom_sig, function(x) {
+  x %>%
+    dplyr::left_join(depmap_score, by='SYMBOL')
+})
+file_name <- 
+  paste0(cell_line, 
+         '-chrom-limma-statistics-sig-protein-depmap.xlsx')
+print(file_name)
+writexl::write_xlsx(new_chrom_sig, 
+                    here::here(stat_dir, file_name))
+```
+
+
+# sessionInfo
+```{r sessioninfo}
+sessionInfo()
+```
