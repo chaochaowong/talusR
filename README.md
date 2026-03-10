@@ -1,3 +1,4 @@
+https://zenodo.org/badge/976311856.svg
 # talusR — Lightweight R toolkit for Talus Bio proteomics
 
 For a full walk-through, please veiw the [vignette](https://chaochaowong.github.io/talusR/).
