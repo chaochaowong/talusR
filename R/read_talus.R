@@ -140,7 +140,7 @@ read_talus <- function(file, meta_file,
     if (is(tds, 'TalusDataSetList')) {
       tds <- endoapply(tds, .remove_few_measurements, threshold = 0.85)
     } else {
-      se <- .remove_few_measurements(tds, threshold = 0.85)
+      tds <- .remove_few_measurements(tds, threshold = 0.85)
     }
   }
 
