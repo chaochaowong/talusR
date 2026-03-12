@@ -48,7 +48,7 @@ setMethod("talus_limma", signature(object = "TalusDataSet"),
 .wrap_limma <- function(object, design) {
   # assemble row_data to be join to the output of topTable()
   row_data <- as.data.frame(rowData(object)) %>%
-    tibble::rownames_to_column(var = "id")
+    tibble::rownames_to_column(var = "ID")
 
   # assemble contrast model matrix
   col_data <- colData(object)
@@ -83,8 +83,8 @@ setMethod("talus_limma", signature(object = "TalusDataSet"),
       coef = conts, number = nrow(assay),
       sort.by = "P"
     ) %>%
-      tibble::rownames_to_column(var = "id") %>%
-      dplyr::left_join(row_data, by = "id")
+      #tibble::rownames_to_column(var = "id") %>%
+      dplyr::left_join(row_data, by = "ID")
   })
   names(top_table) <- names(contrast_exprs)
 
