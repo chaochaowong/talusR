@@ -5,13 +5,14 @@
 #' @param object a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data.
 #' @param top_n number of top proteins to use for principal components, selected by highest row variance (default 500).
 #' @param color_by column name in `colData(object)` for point coloring (default none).
+#' @param shape_by column name in `colData(object)` for point shapes (default none).
 #' @return
 #'   a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
 #' @name plot_pca
 #' @rdname plot_pca
 #' @export
 setGeneric("plot_pca",
-           function(object, top_n = 500, color_by)
+           function(object, top_n = 500, color_by, shape_by = NULL)
              standardGeneric("plot_pca"))
 
 #' @rdname plot_pca
@@ -20,7 +21,8 @@ setGeneric("plot_pca",
 setMethod("plot_pca", "TalusDataSetList",
           function(object,
                    top_n = 500,
-                   color_by) {
+                   color_by,
+                   shape_by = NULL) {
     # get pcs
     pcs_by_source <- map(object, function(x) {
       .get_pcs(x, top_n)
@@ -32,9 +34,14 @@ setMethod("plot_pca", "TalusDataSetList",
     if (!all(color_by %in% names(pcs))) {
       stop("the argument 'color_by' should specify columns of colData(object)")
     }
+    if (!is.null(shape_by) && !all(shape_by %in% names(pcs))) {
+      stop("the argument 'shape_by' should specify columns of colData(object)")
+    }
 
     # plot pca
-    ggplot(pcs, aes_string(x = "PC1", y = "PC2", color = color_by)) +
+    ggplot(pcs, aes_string(
+      x = "PC1", y = "PC2", color = color_by, shape = shape_by
+    )) +
       geom_point(size = 2, alpha = 0.8) +
       facet_wrap(~source, nrow = 2, scales = "free") +
       theme_bw() +
@@ -53,7 +60,8 @@ setMethod("plot_pca", "TalusDataSetList",
 setMethod("plot_pca", "TalusDataSet",
           function(object,
                    top_n = 500,
-                   color_by) {
+                   color_by,
+                   shape_by = NULL) {
 
     pcs <- .get_pcs(object, top_n)
     percent_var <- attr(pcs, "percent_var")
@@ -61,8 +69,13 @@ setMethod("plot_pca", "TalusDataSet",
     if (!all(color_by %in% names(pcs))) {
       stop("the argument 'color_by' should specify columns of colData(object)")
     }
+    if (!is.null(shape_by) && !all(shape_by %in% names(pcs))) {
+      stop("the argument 'shape_by' should specify columns of colData(object)")
+    }
 
-    ggplot(pcs, aes_string(x = "PC1", y = "PC2", color = color_by)) +
+    ggplot(pcs, aes_string(
+      x = "PC1", y = "PC2", color = color_by, shape = shape_by
+    )) +
       geom_point(size = 2, alpha = 0.8) +
       theme_bw() +
       theme(

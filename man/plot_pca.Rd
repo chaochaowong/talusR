@@ -8,11 +8,11 @@
 \alias{plot_pca,TalusDataSet}
 \title{Simple PCA scatter plot for TalusDataSet and TalusDataSetList}
 \usage{
-plot_pca(object, top_n = 500, color_by)
+plot_pca(object, top_n = 500, color_by, shape_by = NULL)
 
-\S4method{plot_pca}{TalusDataSetList}(object, top_n = 500, color_by)
+\S4method{plot_pca}{TalusDataSetList}(object, top_n = 500, color_by, shape_by = NULL)
 
-\S4method{plot_pca}{TalusDataSet}(object, top_n = 500, color_by)
+\S4method{plot_pca}{TalusDataSet}(object, top_n = 500, color_by, shape_by = NULL)
 }
 \arguments{
 \item{object}{a \code{TalusDataSet} or \code{TalusDataSetList} object storing Talus data.}
@@ -20,6 +20,8 @@ plot_pca(object, top_n = 500, color_by)
 \item{top_n}{number of top proteins to use for principal components, selected by highest row variance (default 500).}
 
 \item{color_by}{column name in \code{colData(object)} for point coloring (default none).}
+
+\item{shape_by}{column name in \code{colData(object)} for point shapes (default none).}
 }
 \value{
 a \code{ggplot} object for \code{TalusDataSet} or \code{TalusDataSetList}
