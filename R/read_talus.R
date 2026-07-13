@@ -17,7 +17,7 @@
 #' @return a \code{TalusDataSetList} object if \code{split_by_fraction} is TRUE, otherwise return a \code{TalusDataSet} object.
 #'
 #' @importFrom rlang has_name
-#' @importFrom readr read_delim
+#' @importFrom readr read_tsv
 #' @importFrom readr read_csv
 #' @importFrom tools file_ext
 #' @importFrom purrr map
@@ -63,7 +63,7 @@ read_talus <- function(file, meta_file,
     stop('File must be in either csv or tsv format.')
 
   if (is_tsv) {
-    tb <- read_delim(file, delim = "\t")
+    tb <- read_tsv(file)
   }
 
   if (is_csv) {

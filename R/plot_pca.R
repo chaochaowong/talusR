@@ -22,9 +22,11 @@ setMethod("plot_pca", "TalusDataSetList",
                    top_n = 500,
                    color_by) {
     # get pcs
-    pcs <- map_dfr(object, function(x) {
+    pcs_by_source <- map(object, function(x) {
       .get_pcs(x, top_n)
-    }, .id = "source")
+    })
+    percent_var <- attr(pcs_by_source[[1]], "percent_var")
+    pcs <- map_dfr(pcs_by_source, identity, .id = "source")
 
     # make sure color_by column exists
     if (!all(color_by %in% names(pcs))) {
@@ -40,7 +42,8 @@ setMethod("plot_pca", "TalusDataSetList",
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank()
       ) +
-      theme(legend.position = 'bottom')
+      theme(legend.position = 'bottom') +
+      labs(x = percent_var[1], y = percent_var[2])
   }
 )
 
@@ -53,6 +56,7 @@ setMethod("plot_pca", "TalusDataSet",
                    color_by) {
 
     pcs <- .get_pcs(object, top_n)
+    percent_var <- attr(pcs, "percent_var")
 
     if (!all(color_by %in% names(pcs))) {
       stop("the argument 'color_by' should specify columns of colData(object)")
@@ -64,7 +68,8 @@ setMethod("plot_pca", "TalusDataSet",
       theme(
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_blank()
-      )
+      ) +
+      labs(x = percent_var[1], y = percent_var[2])
   }
 )
 
@@ -87,11 +92,12 @@ setMethod("plot_pca", "TalusDataSet",
   df <- data.frame(
     PC1 = pca$x[, "PC1"],
     PC2 = pca$x[, "PC2"],
-    name = colnames(object), colData(object),
-    percent_var = paste(c("PC1:", "PC2:"),
-      paste0(round(percentVar * 100)[1:2], "%"),
-      collapse = "; "
-    )
+    name = colnames(object), colData(object)
+  )
+  attr(df, "percent_var") <- paste0(
+    c("PC1: ", "PC2: "),
+    round(percentVar * 100)[1:2],
+    "%"
   )
   return(df)
 }
